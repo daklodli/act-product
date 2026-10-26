@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#faf8f1">
+  <meta name="description" content="404 — Էջը չի գտնվել | Act Product">
+  <title>404 — Էջը չի գտնվել | Act Product</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23131311'/%3E%3Ctext x='32' y='43' font-family='sans-serif' font-size='32' font-weight='900' fill='white' text-anchor='middle'%3EA%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&family=Noto+Sans+Armenian:wght@400;500;600;700&family=Noto+Serif+Armenian:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=46">
+  <style>
+    body.nf {
+      background: var(--bg, #faf8f1);
+      color: var(--ink, #131311);
+      font-family: var(--font-body, 'Work Sans', 'Noto Sans Armenian', sans-serif);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+    }
+    .nf-main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      padding: 64px 0 80px;
+    }
+    .nf-main .wrap { width: min(1120px, 100% - 32px); margin: 0 auto; }
+    .nf-solo {
+      width: min(620px, 100%);
+      margin: 0 auto;
+      text-align: center;
+      animation: nfUp .45s ease both;
+    }
+    @keyframes nfUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: none; }
+    }
+    .nf-kicker {
+      margin: 0;
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      color: var(--muted, #6b6b6b);
+    }
+    .nf-code {
+      margin: 4px 0 0;
+      font-family: var(--font-head, 'Fraunces', 'Noto Serif Armenian', serif);
+      font-weight: 700;
+      font-size: clamp(5rem, 17vw, 9rem);
+      line-height: 1;
+      letter-spacing: -.045em;
+      color: var(--ink, #131311);
+    }
+    .nf-solo h1 {
+      margin: 12px 0 0;
+      font-family: var(--font-head, 'Fraunces', 'Noto Serif Armenian', serif);
+      font-weight: 600;
+      font-size: clamp(1.5rem, 3.4vw, 2rem);
+      letter-spacing: -.01em;
+      text-wrap: balance;
+    }
+    .nf-lede {
+      margin: 10px auto 0;
+      max-width: 480px;
+      color: var(--muted, #6b6b6b);
+      line-height: 1.7;
+      font-size: .97rem;
+      text-wrap: pretty;
+    }
+    .nf-search {
+      margin: 28px auto 0;
+      max-width: 480px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+    }
+    .nf-search input {
+      flex: 1;
+      border: none;
+      border-bottom: 2px solid #131311;
+      border-radius: 0;
+      background: transparent;
+      padding: 12px 4px;
+      font: inherit;
+      font-size: .95rem;
+      outline: none;
+      min-width: 0;
+      color: inherit;
+    }
+    .nf-search input::placeholder { color: var(--muted, #6b6b6b); opacity: .8; }
+    .nf-search input:focus-visible { outline: none; }
+    .nf-search button {
+      background: #131311;
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      padding: 11px 26px;
+      min-height: 44px;
+      font-weight: 800;
+      font-size: .88rem;
+      font-family: inherit;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .nf-search button:hover { background: #000; }
+    .nf-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .nf-actions .cta-btn {
+      background: #131311;
+      color: #fff;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 50px;
+      padding: 12px 28px;
+      border-radius: 999px;
+      font-weight: 700;
+      border: 1.5px solid #131311;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: .93rem;
+    }
+    .nf-actions .cta-btn:hover { background: #000; }
+    .nf-actions .cta-btn.ghost-dark { background: transparent; color: #131311; }
+    .nf-actions .cta-btn.ghost-dark:hover { background: #131311; color: #fff; }
+    .nf-back {
+      margin: 16px 0 0;
+    }
+    .nf-back button {
+      background: none;
+      border: none;
+      padding: 8px 12px;
+      font: inherit;
+      font-size: .88rem;
+      font-weight: 600;
+      color: var(--muted, #6b6b6b);
+      cursor: pointer;
+      border-radius: 8px;
+    }
+    .nf-back button:hover { color: #131311; text-decoration: underline; }
+    .nf-pop {
+      margin: 30px 0 0;
+      font-size: .86rem;
+      color: var(--muted, #6b6b6b);
+      line-height: 2.1;
+    }
+    .nf-pop a {
+      color: var(--ink, #131311);
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .nf-pop a:hover { text-decoration: underline; }
+    .nf-pop a + a::before {
+      content: "·";
+      margin: 0 10px;
+      color: var(--border, #e5e5e5);
+      font-weight: 400;
+    }
+    .nf-contacts {
+      margin: 26px 0 0;
+      font-size: .84rem;
+      color: var(--muted, #6b6b6b);
+    }
+    .nf-contacts a {
+      color: var(--ink, #131311);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .nf-contacts a:hover { text-decoration: underline; }
+    a:focus-visible, button:focus-visible, input:focus-visible {
+      outline: 3px solid #131311;
+      outline-offset: 2px;
+      border-radius: 8px;
+    }
+    @media (max-width: 600px) {
+      .nf-main { padding: 40px 0 56px; }
+      .nf-search { flex-direction: column; align-items: stretch; }
+      .nf-search button { width: 100%; }
+      .nf-actions .cta-btn { flex: 1 1 100%; justify-content: center; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .nf-solo { animation: none; }
+    }
+  .nf-back button { display: inline-flex; align-items: center; gap: 8px; }
+.ic { flex: none; display: block; }
+</style>
+</head>
+<body class="nf">
+  <a href="#nfMain" class="skip-link" data-nf="skip">Անցնել հիմնական բովանդակությանը</a>
+
+  <header>
+    <div class="headbar">
+      <a href="index.html" class="logo" id="nfLogo" aria-label="Act Product">Act Product</a>
+      <div class="header-actions">
+        <button class="lang-toggle" id="nfLang" type="button" aria-label="Switch to English">EN</button>
+        <a href="index.html" class="cta-btn" id="nfHeadHome" style="min-height:40px;padding:9px 18px;font-size:.85rem"><span data-nf="home">Գլխավոր</span></a>
+      </div>
+    </div>
+  </header>
+
+  <main class="nf-main" id="nfMain">
+    <div class="wrap">
+      <div class="nf-solo">
+        <p class="nf-kicker" data-nf="kicker">Սխալ 404</p>
+        <p class="nf-code" aria-label="404">404</p>
+        <h1 data-nf="title">Էջը չի գտնվել</h1>
+        <p class="nf-lede" data-nf="lede">Նման էջ գոյություն չունի։ Ստուգեք հասցեն կամ օգտվեք որոնումից։</p>
+
+        <form class="nf-search" id="nfSearchForm" role="search">
+          <input type="search" id="nfSearch" autocomplete="off" enterkeyhint="search" placeholder="Որոնել ապրանք… (օր.՝ պայուսակ)" aria-label="Որոնել կայքում">
+          <button type="submit" data-nf="searchBtn">Որոնել</button>
+        </form>
+
+        <div class="nf-actions">
+          <a class="cta-btn" id="nfGoHome" href="index.html"><span data-nf="goHome">Գլխավոր էջ</span></a>
+          <a class="cta-btn ghost-dark" id="nfGoCatalog" href="index.html#products"><span data-nf="goCatalog">Դիտել տեսականին</span></a>
+        </div>
+        <p class="nf-back"><button type="button" id="nfGoBack"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 14 4 9l5-5"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg> <span data-nf="goBack">Հետ գնալ</span></button></p>
+
+        <p class="nf-pop" id="nfChips"><span data-nf="popular">Հաճախ են փնտրում</span>
+          <a data-cat="textile" href="index.html?cat=textile#products"><span data-nf="cTex">Տեքստիլ</span></a><a data-cat="art" href="index.html?cat=art#products"><span data-nf="cArt">Նկարչություն</span></a><a data-cat="accessory" href="index.html?cat=accessory#products"><span data-nf="cAcc">Աքսեսուարներ</span></a><a data-cat="ceramic" href="index.html?cat=ceramic#products"><span data-nf="cCer">Կավագործություն</span></a><a data-cat="cs" href="index.html?cat=cs#products"><span data-nf="cCS">Համակարգչային գիտություն</span></a><a data-cat="digitalart" href="index.html?cat=digitalart#products"><span data-nf="cDA">Դիջիթլ արվեստ</span></a><a data-cat="engineer" href="index.html?cat=engineer#products"><span data-nf="cEng">Ինժեներություն</span></a>
+        </p>
+
+        <p class="nf-contacts"><span data-nf="help">Օգնություն է պետք՞</span>
+          <a href="tel:+37433638866">033 63 88 66</a> ·
+          <a href="mailto:info@actproduct.am">info@actproduct.am</a>
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="foot-grid">
+        <div class="foot-brand">
+          <a href="index.html" class="logo logo-dark">Act Product</a>
+          <p class="foot-tag" data-nf="footTag">Ձեռագործ արտադրանքի առցանց խանութ։</p>
+        </div>
+        <div class="foot-contacts">
+          <a href="tel:+37433638866" class="foot-contact">
+            <span class="foot-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </span>
+            <span><strong data-nf="footPhone">Հեռախոս</strong><small>033 63 88 66</small></span>
+          </a>
+          <a href="mailto:info@actproduct.am" class="foot-contact">
+            <span class="foot-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg>
+            </span>
+            <span><strong data-nf="footMail">Էլ. փոստ</strong><small>info@actproduct.am</small></span>
+          </a>
+          <a href="https://instagram.com/act.products" target="_blank" rel="noopener" class="foot-contact">
+            <span class="foot-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+            </span>
+            <span><strong>Instagram</strong><small>@act.products</small></span>
+          </a>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <p class="copyright">© Act Product, <span id="nfYear">2026</span></p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var STR = {
+        hy: {
+          skip: 'Անցնել հիմնական բովանդակությանը', home: 'Գլխավոր',
+          kicker: 'Սխալ 404', title: 'Էջը չի գտնվել',
+          lede: 'Նման էջ գոյություն չունի։ Ստուգեք հասցեն կամ օգտվեք որոնումից։',
+          goHome: 'Գլխավոր էջ', goCatalog: 'Դիտել տեսականին', goBack: 'Հետ գնալ',
+          searchBtn: 'Որոնել', searchPh: 'Որոնել ապրանք… (օր.՝ պայուսակ)',
+          popular: 'Հաճախ են փնտրում', cTex: 'Տեքստիլ', cArt: 'Նկարչություն',
+          cAcc: 'Աքսեսուարներ', cCer: 'Կավագործություն', cCS: 'Համակարգչային գիտություն', cDA: 'Դիջիթլ արվեստ', cEng: 'Ինժեներություն',
+          help: 'Օգնություն է պետք՞', footTag: 'Ձեռագործ արտադրանքի առցանց խանութ։',
+          footPhone: 'Հեռախոս', footMail: 'Էլ. փոստ', docTitle: '404 — Էջը չի գտնվել | Act Product'
+        },
+        en: {
+          skip: 'Skip to main content', home: 'Home',
+          kicker: 'Error 404', title: 'Page not found',
+          lede: 'This page doesn’t exist. Check the address or try searching.',
+          goHome: 'Homepage', goCatalog: 'View catalog', goBack: 'Go back',
+          searchBtn: 'Search', searchPh: 'Search products… (e.g. bag)',
+          popular: 'People often search:', cTex: 'Textile', cArt: 'Painting',
+          cAcc: 'Accessories', cCer: 'Ceramics', cCS: 'Computer Science', cDA: 'Digital Art', cEng: 'Engineering',
+          help: 'Need help?', footTag: 'Handmade products online store.',
+          footPhone: 'Phone', footMail: 'Email', docTitle: '404 — Page not found | Act Product'
+        }
+      };
+      var lang = 'hy';
+      try {
+        var um = /(?:\?|&)lang=(hy|en)(?:&|#|$)/.exec(location.search);
+        var s = null;
+        try { s = localStorage.getItem('act-lang'); } catch (e2) {}
+        if (um) {
+          lang = um[1];
+          try { localStorage.setItem('act-lang', lang); } catch (e3) {}
+        } else if (s === 'hy' || s === 'en') {
+          lang = s;
+        }
+      } catch (e) {}
+
+      var $ = function (id) { return document.getElementById(id); };
+
+      function applyLang() {
+        var d = STR[lang];
+        document.documentElement.lang = lang;
+        document.title = d.docTitle;
+        document.querySelector('meta[name="description"]').content = d.lede;
+        document.querySelectorAll('[data-nf]').forEach(function (el) {
+          var k = el.getAttribute('data-nf');
+          if (d[k]) el.textContent = d[k];
+        });
+        $('nfSearch').setAttribute('placeholder', d.searchPh);
+        $('nfSearch').setAttribute('aria-label', d.searchPh);
+        $('nfLang').textContent = lang === 'hy' ? 'EN' : 'ՀԱ';
+        $('nfLang').setAttribute('aria-label', lang === 'hy' ? 'Switch to English' : 'Փոխել հայերենի');
+        document.querySelectorAll('a[href*="index.html"]').forEach(function (a) { var u = new URL(a.href); u.searchParams.set('lang', lang); a.href = u.href; });
+      }
+
+      $('nfLang').addEventListener('click', function () {
+        var next = lang === 'hy' ? 'en' : 'hy';
+        try { localStorage.setItem('act-lang', next); } catch (e) {}
+        lang = next;
+        try { var u = new URL(location.href); u.searchParams.set('lang', lang); history.replaceState(null, '', u); } catch (e) {}
+        applyLang();
+      });
+
+      // Նույն թղթապանակի index.html (աշխատում է GitHub Pages subpath-ի դեպքում էլ)
+      function dirOf() {
+        var p = location.pathname;
+        return p.substring(0, p.lastIndexOf('/') + 1);
+      }
+      function indexUrl(extra) {
+        var base = new URL('index.html', location.href);
+        base.searchParams.set('lang', lang);
+        if (extra) { var u = new URL(extra, base); u.searchParams.set('lang', lang); return u.href; }
+        return base.href;
+      }
+      // Ֆիքսել հղումները, որ file:// և subfolder-ում էլ ճիշտ աշխատեն
+      var dir = dirOf();
+      var origin = location.origin && location.origin !== 'null' ? location.origin : '';
+      function fixHref(el, extra) {
+        var url = new URL((origin || '') + dir + 'index.html' + extra, location.href);
+        url.searchParams.set('lang', lang); el.setAttribute('href', url.href);
+      }
+      fixHref($('nfLogo'), '');
+      fixHref($('nfHeadHome'), '');
+      fixHref($('nfGoHome'), '');
+      fixHref($('nfGoCatalog'), '#products');
+      document.querySelectorAll('#nfChips a').forEach(function (a) {
+        var cat = a.getAttribute('data-cat');
+        fixHref(a, cat && cat !== 'all' ? ('?cat=' + cat + '#products') : '#products');
+      });
+
+      $('nfGoBack').addEventListener('click', function () {
+        if (history.length > 1) history.back();
+        else location.href = indexUrl('');
+      });
+
+      // Որոնում → index.html?q=...#products (script.js-ը կարդում է ?q-ն)
+      $('nfSearchForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var q = $('nfSearch').value.trim();
+        location.href = indexUrl(q ? ('?q=' + encodeURIComponent(q) + '#products') : '#products');
+      });
+
+      $('nfYear').textContent = new Date().getFullYear();
+      applyLang();
+    })();
+  </script>
+</body>
+</html>
