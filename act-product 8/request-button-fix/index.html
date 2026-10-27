@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&family=Noto+Sans+Armenian:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=75">
+  <link rel="stylesheet" href="checkout-update/style.css?v=77">
 </head>
 
 <body>
@@ -233,7 +233,7 @@
       <p class="promo-msg" id="promoMsg" hidden></p>
 
       <p class="cart-note" data-i18n="cartNote">
-        Վճարման և ստացման պայմանները կհամաձայնեցվեն հեռախոսազանգի միջոցով։
+        Վճարումը՝ միայն կանխիկ, ապրանքը ստանալիս։
       </p>
 
       <button class="cta-btn cart-checkout" id="cartCheckout" type="button" data-i18n="checkout">
@@ -244,45 +244,51 @@
 
   <div class="co-overlay" id="coOverlay"></div>
 
-  <div class="co-modal" id="coModal" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="co-box">
+  <div class="co-modal" id="coModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="coTitle">
+    <div class="co-box checkout-box">
       <button class="qv-close" id="coClose" type="button" aria-label="Փակել" data-i18n-aria="close"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
 
       <p class="section-kicker" data-i18n="coKicker">Պատվերի ձևակերպում</p>
-      <h3 data-i18n="coTitle">Ձեր տվյալները</h3>
-
-      <p class="co-total">
-        <span data-i18n="totalLabel">Ընդհանուր գումար՝</span> <strong id="coTotal">0 ֏</strong>
-      </p>
-
+      <h3 id="coTitle" data-i18n="coTitle">Ձևակերպիր պատվերդ</h3>
+      <p class="checkout-intro" data-i18n="coIntro">Լրացրու անունդ ու հեռախոսահամարդ, որ կարողանանք ճշտել պատվերի մանրամասները։</p>
+      <div class="checkout-layout">
+      <aside class="checkout-summary" aria-labelledby="coSummaryTitle">
+        <h4 id="coSummaryTitle" data-i18n="coSummary">Քո պատվերը</h4>
+        <ul id="coItems" class="checkout-items"></ul>
+        <p id="coDiscount" class="checkout-discount" hidden></p>
+        <p class="co-total"><span data-i18n="coGoodsTotal">Ապրանքների արժեքը</span><strong id="coTotal">0 ֏</strong></p>
+        <div class="checkout-payment">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="3"/><circle cx="12" cy="12" r="3"/><path d="M5 9h1m12 6h1"/></svg>
+          <div><span class="co-label" data-i18n="coPay">Վճարման եղանակ</span><p class="pay-only" data-i18n="coPayCash">Կանխիկ՝ ստանալիս</p></div>
+          <p class="checkout-payment-note" data-i18n="coCashNote">Վճարիր կանխիկ՝ ապրանքը ստանալիս։ Քարտային կամ առցանց վճարում չկա։</p>
+        </div>
+      </aside>
       <form id="coForm" novalidate>
         <div class="field">
           <label for="coName" data-i18n="coName">Անուն Ազգանուն</label>
-          <input id="coName" name="name" type="text" autocomplete="name" placeholder="Անի Հակոբյան" data-i18n-ph="coNamePh">
+          <input id="coName" name="name" type="text" autocomplete="name" required maxlength="100" placeholder="Անի Հակոբյան" data-i18n-ph="coNamePh">
         </div>
 
         <div class="field">
           <label for="coPhone" data-i18n="coPhone">Հեռախոսահամար</label>
-          <input id="coPhone" name="phone" type="tel" autocomplete="tel" placeholder="077 123 456" data-i18n-ph="phoneExample">
+          <input id="coPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required maxlength="25" placeholder="077 123 456" data-i18n-ph="phoneExample">
         </div>
 
         <div class="field">
-          <label for="coAddress" data-i18n="coAddress">Առաքման հասցե</label>
-          <input id="coAddress" name="address" type="text" autocomplete="street-address" placeholder="Քաղաք, փողոց, շենք" data-i18n-ph="coAddressPh">
-        </div>
-
-        <div class="field">
-          <span class="co-label" data-i18n="coPay">Վճարման եղանակ</span>
-          <p class="pay-only" data-i18n="coPayCash">Կանխիկ՝ ստանալիս</p>
+          <label for="coAddress" data-i18n="coAddress">Հասցե (ոչ պարտադիր)</label>
+          <input id="coAddress" name="address" type="text" autocomplete="street-address" maxlength="250" placeholder="Քաղաք, փողոց, շենք" data-i18n-ph="coAddressPh">
         </div>
 
         <div class="field">
           <label for="coComment" data-i18n="coComment">Մեկնաբանություն (ոչ պարտադիր)</label>
-          <textarea id="coComment" name="comment" rows="2"></textarea>
+          <textarea id="coComment" name="comment" rows="2" maxlength="1000" placeholder="Ի՞նչ կցանկանաս ճշտել պատվերի մասին։" data-i18n-ph="coCommentPh"></textarea>
         </div>
 
-        <button type="submit" class="cta-btn cart-checkout" data-i18n="coSubmit">Հաստատել պատվերը</button>
+        <p class="checkout-local-note" data-i18n="coLocalNote">Տվյալները կպահպանվեն այս բրաուզերում։ Պատվերը հաստատելու համար կապվիր մեզ հետ։</p>
+        <button type="submit" class="cta-btn cart-checkout" data-i18n="coSubmit">Պահպանել պատվերի տվյալները</button>
+        <a class="checkout-contact" href="tel:+37433638866"><span data-i18n="contactShop">Կապվել խանութի հետ</span> · 033 63 88 66</a>
       </form>
+      </div>
     </div>
   </div>
 
@@ -417,9 +423,10 @@
 
   <button class="back-to-top" id="backToTop" type="button" aria-label="Վերև" hidden data-i18n-aria="aTop"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
 
-  <script defer src="lang.js?v=74"></script>
+  <script defer src="checkout-update/lang.js?v=77"></script>
   <script defer src="catalog-products.js?v=74"></script>
   <script defer src="photo-products.js?v=74"></script>
-  <script defer src="script.js?v=74"></script>
+  <script defer src="checkout-update/script.js?v=77"></script>
 </body>
 </html>
+
