@@ -2593,3 +2593,17 @@ html {
 /* Compact catalog heading and a text-only search field. */
 .products-heading h2 { font-size: clamp(1.4rem, 2.4vw, 2rem); line-height: 1.3; }
 .search-wrap input::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
+
+
+
+#customSubmit {
+  background: #0041c2;
+  color: #fff;
+  border: 1px solid #0041c2;
+}
+
+#customSubmit:hover {
+  background: #fff;
+  color: #0041c2;
+  filter: none;
+}
