@@ -1104,6 +1104,7 @@
       return el ? el.textContent : '';
     }
     var product = PRODUCTS[Number(card.dataset.index)];
+    if (window.ACTAnalytics) window.ACTAnalytics.viewProduct(product);
     var detail = lang === 'en' ? product.en : product.hy;
     var pending = product.price == null;
     var cat = card.dataset.category || 'textile';
@@ -1154,6 +1155,7 @@
   }
 
   function closeQuickView(restoreFocus, updateHistory) {
+    if (window.ACTAnalytics) window.ACTAnalytics.closeProduct();
     if (sharePanel) closeSharePanel(false);
     if (updateHistory !== false) syncProductUrl(null, false);
     var playing = $('#qvVideo'); if (playing) { playing.pause(); playing.removeAttribute('src'); playing.load(); }

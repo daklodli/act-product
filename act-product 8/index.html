@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&family=Noto+Sans+Armenian:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=78">
+  <link rel="stylesheet" href="style.css?v=79">
 </head>
 
 <body>
@@ -201,6 +201,7 @@
 
       <div class="foot-bottom">
         <p class="copyright">© Act Product, 2026</p>
+        <button type="button" id="analyticsSettings" class="analytics-settings" data-i18n="analyticsSettings">Վիճակագրության ընտրանքներ</button>
       </div>
     </div>
   </footer>
@@ -426,9 +427,19 @@
 
   <button class="back-to-top" id="backToTop" type="button" aria-label="Վերև" hidden data-i18n-aria="aTop"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
 
-  <script defer src="lang.js?v=78"></script>
+  <section id="analyticsChoice" class="analytics-choice" aria-labelledby="analyticsTitle" hidden>
+    <h2 id="analyticsTitle" data-i18n="analyticsTitle">Կայքի վիճակագրություն</h2>
+    <p data-i18n="analyticsNote">Թույլատրե՞լ Google Analytics-ին չափել այցելություններն ու կայքում անցկացրած ակտիվ ժամանակը։ Ընտրությունդ կարող ես փոխել էջի ներքևում։</p>
+    <a href="https://policies.google.com/privacy" target="_blank" rel="noopener" data-i18n="analyticsPrivacy">Google-ի գաղտնիության քաղաքականությունը</a>
+    <div class="analytics-buttons">
+      <button id="analyticsDecline" type="button" data-i18n="analyticsDecline">Մերժել</button>
+      <button id="analyticsAllow" type="button" data-i18n="analyticsAllow">Թույլատրել</button>
+    </div>
+  </section>
+  <script defer src="lang.js?v=79"></script>
   <script defer src="catalog-products.js?v=74"></script>
   <script defer src="photo-products.js?v=74"></script>
-  <script defer src="script.js?v=78"></script>
+  <script defer src="script.js?v=79"></script>
+  <script defer src="analytics.js?v=79"></script>
 </body>
 </html>

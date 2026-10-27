@@ -2656,6 +2656,15 @@ html {
 .search-submit { display: inline-flex; align-items: center; justify-content: center; flex: none; gap: 8px; padding: 0 18px; min-height: 44px; border: 1px solid #0041c2; border-radius: 11px; background: #0041c2; color: #fff; cursor: pointer; font-size: .85rem; font-weight: 600; transition: background-color .18s, color .18s; }
 .search-submit:hover, .search-submit:focus-visible { background: #fff; color: #0041c2; }
 .search-field .search-clear { right: 4px; }
+.analytics-settings { padding: 4px 0; border: 0; background: none; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; font-size: .75rem; cursor: pointer; }
+.analytics-choice { position: fixed; z-index: 180; bottom: 18px; left: 18px; width: min(420px, calc(100% - 36px)); padding: 20px; background: #fff; border: 1px solid #deddd7; border-radius: 18px; box-shadow: 0 10px 40px rgba(0,0,0,.15); }
+.analytics-choice h2 { margin: 0 0 8px; font-family: var(--font-body); font-size: 1rem; }
+.analytics-choice p { margin: 0 0 10px; font-size: .82rem; line-height: 1.6; color: var(--muted); }
+.analytics-choice > a { color: #0041c2; font-size: .72rem; text-underline-offset: 3px; }
+.analytics-buttons { display: flex; gap: 8px; margin-top: 16px; }
+.analytics-buttons button { flex: 1; min-height: 44px; padding: 8px 14px; border: 1px solid #0041c2; border-radius: 10px; background: #fff; color: #0041c2; font-size: .82rem; cursor: pointer; }
+#analyticsAllow { background: #0041c2; color: #fff; }
+.analytics-buttons button:hover { background: #eef3ff; color: #0041c2; }
 @media (max-width: 700px) {
   #coModal .checkout-box { padding: 24px 18px; border-radius: 24px 24px 0 0; max-height: 94dvh; }
   .checkout-layout { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'summary' 'form'; gap: 20px; }
