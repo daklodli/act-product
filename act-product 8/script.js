@@ -732,7 +732,17 @@
 
   productSearch.addEventListener('input', debounce(filterProducts, 120));
 
+  function submitProductSearch() {
+    filterProducts();
+    productSearch.blur();
+  }
+  $('#searchSubmit').addEventListener('click', submitProductSearch);
+
   productSearch.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      submitProductSearch();
+    }
     if (event.key === 'Escape' && productSearch.value) {
       productSearch.value = '';
       filterProducts();
@@ -851,11 +861,28 @@
 
   /* ---------- 6g. Checkout modal (վճարում՝ կանխիկ ստանալիս) ---------- */
 
-  function openCheckout() {
-    if (!coModal || !cart.length) return;
+  function renderCheckoutSummary() {
     var subtotal = getCartTotal();
     var discount = getDiscountAmount(subtotal);
     coTotal.textContent = formatPrice(subtotal - discount);
+    var list = $('#coItems');
+    list.replaceChildren();
+    cart.forEach(function (item) {
+      var row = document.createElement('li');
+      var label = document.createElement('span');
+      var amount = document.createElement('strong');
+      label.textContent = displayName(item.name) + ' × ' + item.quantity;
+      amount.textContent = formatPrice(item.price * item.quantity);
+      row.appendChild(label); row.appendChild(amount); list.appendChild(row);
+    });
+    var discountLine = $('#coDiscount');
+    discountLine.hidden = discount <= 0;
+    discountLine.textContent = t('coDiscount') + ': −' + formatPrice(discount);
+  }
+
+  function openCheckout() {
+    if (!coModal || !cart.length) return;
+    renderCheckoutSummary();
     closeCart(false);
     coModal.classList.add('open');
     coOverlay.classList.add('open');
@@ -876,6 +903,17 @@
 
   if (coClose) coClose.addEventListener('click', closeCheckout);
   if (coOverlay) coOverlay.addEventListener('click', closeCheckout);
+  function closeOnBackdrop(modal, close) {
+    if (!modal) return;
+    var startedOnBackdrop = false;
+    modal.addEventListener('pointerdown', function (event) { startedOnBackdrop = event.target === modal; });
+    modal.addEventListener('click', function (event) {
+      if (event.target === modal && startedOnBackdrop) close();
+      startedOnBackdrop = false;
+    });
+  }
+  closeOnBackdrop(coModal, closeCheckout);
+  closeOnBackdrop($('#doneModal'), closeDone);
   if (coPhone && typeof maskAmPhone === 'function') {
     coPhone.addEventListener('input', function () {
       var masked = maskAmPhone(coPhone.value);
@@ -910,6 +948,7 @@
       if (!coAddress || coAddress.value.trim().length < 5) {
         if (coAddress) { setFieldError(coAddress, t('errAddress')); firstInvalid = firstInvalid || coAddress; }
       }
+      if (!cart.length) { closeCheckout(); showToast(t('cartEmpty')); return; }
       if (firstInvalid) { firstInvalid.focus(); return; }
       try {
         var st = getCartTotal();
@@ -923,7 +962,11 @@
           timestamp: Date.now(),
           total: st - dc,
           pay: 'cash',
-          items: cart.map(function (it) { return { n: it.name, q: it.quantity }; })
+          name: coName.value.trim(),
+          phone: normalizeAmPhone(phoneVal),
+          address: coAddress ? coAddress.value.trim() : '',
+          comment: coComment ? coComment.value.trim() : '',
+          items: cart.map(function (it) { return { n: it.name, q: it.quantity, price: it.price }; })
         });
         if (!storeSet(ORD_KEY, JSON.stringify(orders.slice(0, 20)))) throw new Error('Storage unavailable');
       } catch (e) { showToast(t('customSaveError')); return; }
@@ -967,6 +1010,7 @@
   var ordClose = $('#ordClose'), ordOverlay = $('#ordOverlay');
   if (ordClose) ordClose.addEventListener('click', closeOrders);
   if (ordOverlay) ordOverlay.addEventListener('click', closeOrders);
+  closeOnBackdrop($('#ordModal'), closeOrders);
 
   /* ---------- 6b. Quick view ---------- */
   var CAT_DESC = {
@@ -1518,6 +1562,13 @@
         items.textContent = t('customRequestType') + (product ? ' · ' + product[lang].name : '') + ' × ' + order.quantity;
       } else items.textContent = (order.items || []).map(function (it) { return displayName(it.n) + ' × ' + it.q; }).join('; ');
       el.appendChild(items);
+      if (order.type !== 'custom') {
+        var contact = document.createElement('p'); contact.className = 'order-custom-details';
+        contact.textContent = [order.name, order.phone, order.address, order.comment].filter(Boolean).join('\n');
+        if (contact.textContent) el.appendChild(contact);
+        var payment = document.createElement('p'); payment.className = 'order-cash-note';
+        payment.textContent = t('coPayCash'); el.appendChild(payment);
+      }
       if (order.type === 'custom') {
         var details = document.createElement('p'); details.className = 'order-custom-details';
         details.textContent = [order.color ? t('customColor') + ': ' + order.color : '', order.size ? t('customSize') + ': ' + order.size : '', order.details].filter(Boolean).join('\n'); el.appendChild(details);
@@ -1643,6 +1694,7 @@
     $$('[data-error-key]').forEach(function (input) { if (input.dataset.errorKey) setFieldError(input, t(input.dataset.errorKey)); });
     promoMsg.hidden = true;
     refreshCatTitle(); updateFilterCounts(); updateSelBar(); renderCart(); renderOrders(); renderCustomProducts(); filterProducts();
+    if (coModal.classList.contains('open')) renderCheckoutSummary();
     if (activeIndex !== null) {
       openQuickView(productCards.find(function (c) { return c.dataset.index === activeIndex; }));
       if (scroll) scroll.scrollTop = scrollTop;
