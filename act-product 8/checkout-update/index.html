@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Act Product՝ ձեռագործ արտադրանքի առցանց խանութ։">
+  <meta name="theme-color" content="#131311">
+  <title>Act Product — Ձեռագործ արտադրանք</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&family=Noto+Sans+Armenian:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css?v=77">
+</head>
+
+<body>
+  <a href="#mainContent" class="skip-link" data-i18n="skip">Անցնել հիմնական բովանդակությանը</a>
+
+
+  <header>
+    <div class="headbar">
+      <a href="#products" class="logo">Act Product</a>
+
+      <div class="header-actions">
+        <button class="lang-toggle" id="langToggle" type="button">EN</button>
+
+        <button class="cart-toggle" id="ordersToggle" type="button" aria-label="Իմ պատվերները" data-i18n-aria="aOrders">
+          <svg class="ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+        </button>
+
+        <button class="cart-toggle" id="cartToggle" type="button" aria-label="Բացել զամբյուղը" data-i18n-aria="cartOpenEmpty">
+          <svg class="ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span class="cart-badge" id="cartBadge">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="mainContent">
+    <section class="hero-banner" id="home">
+      <div class="hero-video" aria-hidden="true">
+        <iframe src="https://www.youtube.com/embed/ZvUwpsG7_FE?autoplay=1&amp;mute=1&amp;controls=0&amp;disablekb=1&amp;fs=0&amp;loop=1&amp;playlist=ZvUwpsG7_FE&amp;playsinline=1&amp;rel=0" title="Արտադրանքի պատրաստման տեսանյութ" data-i18n-title="heroVideoTitle" allow="autoplay; encrypted-media" tabindex="-1" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      </div>
+      <div class="hero-shade"></div>
+
+      <div class="wrap hero-content">
+        <h1 data-i18n="heroTitle">Ձեռագործ արտադրանք</h1>
+
+        <p class="lede" data-i18n="heroLede">
+          Ընտրեք արտադրանքը, ավելացրեք զամբյուղ և ձևակերպեք պատվերը։
+          Մանրամասները կհամաձայնեցվեն հեռախոսազանգի միջոցով։
+        </p>
+
+        <div class="hero-actions">
+          <a href="#custom" class="hero-custom-link" data-i18n="customNav">Պատվերով պատրաստում</a>
+          <a href="#products" class="cta-btn" data-i18n="heroBtn1">Դիտել տեսականին</a>
+        </div>
+
+        <div class="hero-stats">
+          <div><strong id="productStat">75</strong><span data-i18n="statProducts">ապրանք</span></div>
+          <div><strong>7</strong><span data-i18n="statCats">կատեգորիա</span></div>
+          <div><strong>100%</strong><span data-i18n="statHand">ձեռագործ</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="products" class="products-section">
+      <div class="wrap">
+        <div class="section-head products-heading">
+          <div>
+            <p class="section-kicker" data-i18n="catKicker">Կատալոգ</p>
+            <h2 id="catTitle" data-i18n="catTitle">Բոլոր ապրանքները</h2>
+          </div>
+        </div>
+
+        <div class="products-toolbar">
+          <div class="search-wrap">
+            <label for="productSearch" class="sr-only" data-i18n="searchLabel">Որոնել ապրանքներ</label>
+
+            <input
+              type="search"
+              id="productSearch" data-i18n-ph="searchPh"
+              placeholder="Որոնել ապրանք…"
+              autocomplete="off"
+            >
+
+            <button class="search-clear" id="searchClear" type="button" aria-label="Մաքրել որոնումը" hidden data-i18n-aria="aClearSearch"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+          </div>
+
+          <div class="filter-group" role="group" aria-label="Ապրանքի կատեգորիա" data-i18n-aria="categoryLabel">
+            <button class="filter-btn active" type="button" data-filter="all" data-i18n="fAll">Բոլորը</button>
+            <button class="filter-btn" type="button" data-filter="textile" data-i18n="fTextile">Տեքստիլ</button>
+            <button class="filter-btn" type="button" data-filter="art" data-i18n="fArt">Նկարչություն</button>
+            <button class="filter-btn" type="button" data-filter="accessory" data-i18n="fAccessory">Աքսեսուարներ</button>
+            <button class="filter-btn" type="button" data-filter="ceramic" data-i18n="fCeramic">Կավագործություն</button>
+            <button class="filter-btn" type="button" data-filter="cs" data-i18n="fCS">Համակարգչային գիտություն</button>
+            <button class="filter-btn" type="button" data-filter="digitalart" data-i18n="fDigitalArt">Դիջիթլ արվեստ</button>
+            <button class="filter-btn" type="button" data-filter="engineer" data-i18n="fEngineer">Ինժեներություն</button>
+            <button class="filter-btn" type="button" data-filter="fav" aria-label="Պահպանվածներ" title="Պահպանվածներ" data-i18n-aria="fFav" data-i18n-title="fFav"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          </div>
+        </div>
+
+        <div class="catalog-row">
+          <p class="results-count" id="resultsCount" aria-live="polite"></p>
+
+          <label class="sort-wrap">
+            <span class="sr-only" data-i18n="sortLabel">Դասավորել ըստ գնի</span>
+            <select class="sort-select" id="sortSelect">
+              <option value="default" data-i18n="sortDefault">Ըստ դասավորության</option>
+              <option value="asc" data-i18n="sortAsc">Գինը՝ աճման կարգով</option>
+              <option value="desc" data-i18n="sortDesc">Գինը՝ նվազման կարգով</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="products-grid" id="productsGrid"></div>
+
+        <p class="no-results" id="noResults" hidden data-i18n="noResults">
+          Համապատասխան արդյունքներ չեն գտնվել։
+        </p>
+      </div>
+    </section>
+
+    <section class="custom-section" id="custom" aria-labelledby="customTitle">
+      <div class="wrap custom-layout">
+        <div class="custom-copy">
+          <h2 id="customTitle" data-i18n="customTitle">Պատվերով պատրաստում</h2>
+          <p data-i18n="customIntro">Նշիր ցանկալի գույնը, չափերը և մանրամասները։ Կարող ես կցել օրինակ նկար։</p>
+          <div class="custom-meta">
+          <p class="local-note" data-i18n="customLocalNote"></p>
+          <a class="contact-shop" href="tel:+37433638866"><span data-i18n="contactShop">Կապվել խանութի հետ</span> · 033 63 88 66</a>
+          </div>
+        </div>
+        <form id="customForm" class="custom-form" novalidate>
+          <div class="custom-fields">
+            <div class="field"><label for="customName" data-i18n="coName">Անուն Ազգանուն</label><input id="customName" name="name" autocomplete="name" data-i18n-ph="coNamePh" required></div>
+            <div class="field"><label for="customPhone" data-i18n="coPhone">Հեռախոսահամար</label><input id="customPhone" name="phone" type="tel" autocomplete="tel" data-i18n-ph="phoneExample" required></div>
+          </div>
+          <div class="custom-fields custom-product-row">
+          <div class="field"><label for="customProduct" data-i18n="customProduct">Ո՞ր ապրանքի հիման վրա</label><select id="customProduct" name="product"></select></div>
+          <div class="field"><label for="customQuantity" data-i18n="customQuantity">Քանակ</label><input id="customQuantity" name="quantity" type="number" min="1" max="100" value="1" inputmode="numeric" required></div>
+          </div>
+          <div class="custom-fields">
+            <div class="field"><label for="customColor" data-i18n="customColor">Ցանկալի գույն (ոչ պարտադիր)</label><input id="customColor" name="color" maxlength="120" data-i18n-ph="customColorPh"></div>
+            <div class="field"><label for="customSize" data-i18n="customSize">Չափեր (ոչ պարտադիր)</label><input id="customSize" name="size" maxlength="120" data-i18n-ph="customSizePh"></div>
+          </div>
+          <div class="custom-fields custom-details-row">
+          <div class="field"><label for="customDetails" data-i18n="customDetails">Նկարագրիր գաղափարդ</label><textarea id="customDetails" name="details" rows="3" minlength="10" maxlength="3000" data-i18n-ph="customDetailsPh" required></textarea></div>
+          <div class="field reference-field">
+            <label for="customReference" data-i18n="customReference">Օրինակ նկար (ոչ պարտադիր)</label>
+            <div class="reference-picker"><button id="chooseReference" type="button" data-i18n="customChooseReference"></button><span id="referenceFilename"></span></div>
+            <input hidden id="customReference" name="reference" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.heic,.heif">
+            <small data-i18n="customFileHint"></small>
+            <img id="referencePreview" class="reference-preview" alt="" hidden>
+          </div>
+          </div>
+          <button class="cta-btn" id="customSubmit" type="submit" data-i18n="customSave">Պահպանել հարցումը</button>
+          <div id="customResult" class="custom-result" role="status" hidden><p id="customResultText"></p><button id="customView" type="button" class="text-button" data-i18n="customView">Դիտել իմ հարցումը</button></div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <div class="sel-bar" id="selBar" hidden>
+    <span id="selCount"></span>
+    <strong id="selTotal"></strong>
+    <button class="sel-view" id="selView" type="button" data-i18n="selView">Դիտել</button>
+    <button class="cta-btn" id="selAdd" type="button" data-i18n="add">Ավելացնել զամբյուղ</button>
+    <button class="sel-clear" id="selClear" type="button" data-i18n="clearSelected">Մաքրել</button>
+  </div>
+
+  <footer>
+    <div class="wrap">
+      <div class="foot-grid">
+        <div class="foot-brand">
+          <a href="#products" class="logo logo-dark">Act Product</a>
+          <p class="foot-tag" data-i18n="footTag">Ձեռագործ արտադրանքի առցանց խանութ։</p>
+        </div>
+
+        <div class="foot-contacts">
+          <a href="tel:+37433638866" class="foot-contact">
+            <span class="foot-icon"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
+            <span><strong data-i18n="footPhone">Հեռախոս</strong><small>033 63 88 66</small></span>
+          </a>
+
+          <a href="mailto:info@actproduct.am" class="foot-contact">
+            <span class="foot-icon"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></span>
+            <span><strong data-i18n="footMail">Էլ. փոստ</strong><small>info@actproduct.am</small></span>
+          </a>
+
+          <a href="https://instagram.com/act.products" target="_blank" rel="noopener" class="foot-contact">
+            <span class="foot-icon"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><path d="M17.5 6.5h.01"/></svg></span>
+            <span><strong>Instagram</strong><small>@act.products</small></span>
+          </a>
+        </div>
+      </div>
+
+      <div class="foot-bottom">
+        <p class="copyright">© Act Product, 2026</p>
+      </div>
+    </div>
+  </footer>
+
+  <div class="cart-overlay" id="cartOverlay"></div>
+
+  <aside class="cart-sidebar" id="cartSidebar" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="cart-header">
+      <h2 data-i18n="cartTitle">Զամբյուղ</h2>
+      <button class="cart-close" id="cartClose" type="button" aria-label="Փակել" data-i18n-aria="close"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+
+    <div class="cart-items" id="cartItems">
+      <p class="cart-empty" data-i18n="cartEmpty">Զամբյուղը դատարկ է։</p>
+    </div>
+
+    <div class="cart-footer" id="cartFooter" hidden>
+      <div class="promo-line" id="promoLine" hidden>
+        <span id="promoLabel"></span>
+        <strong id="promoAmount"></strong>
+      </div>
+
+      <div class="cart-total">
+        <span data-i18n="cartTotal">Ընդհանուր</span>
+        <strong id="cartTotal">0 ֏</strong>
+      </div>
+
+      <div class="promo-row">
+        <input class="promo-input" id="promoInput" placeholder="Զեղչի կոդ" data-i18n-ph="promoPh">
+        <button class="promo-btn" id="promoApply" type="button" data-i18n="applyPromo">OK</button>
+      </div>
+
+      <p class="promo-msg" id="promoMsg" hidden></p>
+
+      <p class="cart-note" data-i18n="cartNote">
+        Վճարումը՝ միայն կանխիկ, ապրանքը ստանալիս։
+      </p>
+
+      <button class="cta-btn cart-checkout" id="cartCheckout" type="button" data-i18n="checkout">
+        Ձևակերպել պատվերը
+      </button>
+    </div>
+  </aside>
+
+  <div class="co-overlay" id="coOverlay"></div>
+
+  <div class="co-modal" id="coModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="coTitle">
+    <div class="co-box checkout-box">
+      <button class="qv-close" id="coClose" type="button" aria-label="Փակել" data-i18n-aria="close"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+
+      <p class="section-kicker" data-i18n="coKicker">Պատվերի ձևակերպում</p>
+      <h3 id="coTitle" data-i18n="coTitle">Ձևակերպիր պատվերդ</h3>
+      <p class="checkout-intro" data-i18n="coIntro">Լրացրու անունդ ու հեռախոսահամարդ, որ կարողանանք ճշտել պատվերի մանրամասները։</p>
+      <div class="checkout-layout">
+      <aside class="checkout-summary" aria-labelledby="coSummaryTitle">
+        <h4 id="coSummaryTitle" data-i18n="coSummary">Քո պատվերը</h4>
+        <ul id="coItems" class="checkout-items"></ul>
+        <p id="coDiscount" class="checkout-discount" hidden></p>
+        <p class="co-total"><span data-i18n="coGoodsTotal">Ապրանքների արժեքը</span><strong id="coTotal">0 ֏</strong></p>
+        <div class="checkout-payment">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="3"/><circle cx="12" cy="12" r="3"/><path d="M5 9h1m12 6h1"/></svg>
+          <div><span class="co-label" data-i18n="coPay">Վճարման եղանակ</span><p class="pay-only" data-i18n="coPayCash">Կանխիկ՝ ստանալիս</p></div>
+          <p class="checkout-payment-note" data-i18n="coCashNote">Վճարիր կանխիկ՝ ապրանքը ստանալիս։ Քարտային կամ առցանց վճարում չկա։</p>
+        </div>
+      </aside>
+      <form id="coForm" novalidate>
+        <div class="field">
+          <label for="coName" data-i18n="coName">Անուն Ազգանուն</label>
+          <input id="coName" name="name" type="text" autocomplete="name" required maxlength="100" placeholder="Անի Հակոբյան" data-i18n-ph="coNamePh">
+        </div>
+
+        <div class="field">
+          <label for="coPhone" data-i18n="coPhone">Հեռախոսահամար</label>
+          <input id="coPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required maxlength="25" placeholder="077 123 456" data-i18n-ph="phoneExample">
+        </div>
+
+        <div class="field">
+          <label for="coAddress" data-i18n="coAddress">Հասցե (ոչ պարտադիր)</label>
+          <input id="coAddress" name="address" type="text" autocomplete="street-address" maxlength="250" placeholder="Քաղաք, փողոց, շենք" data-i18n-ph="coAddressPh">
+        </div>
+
+        <div class="field">
+          <label for="coComment" data-i18n="coComment">Մեկնաբանություն (ոչ պարտադիր)</label>
+          <textarea id="coComment" name="comment" rows="2" maxlength="1000" placeholder="Ի՞նչ կցանկանաս ճշտել պատվերի մասին։" data-i18n-ph="coCommentPh"></textarea>
+        </div>
+
+        <p class="checkout-local-note" data-i18n="coLocalNote">Տվյալները կպահպանվեն այս բրաուզերում։ Պատվերը հաստատելու համար կապվիր մեզ հետ։</p>
+        <button type="submit" class="cta-btn cart-checkout" data-i18n="coSubmit">Պահպանել պատվերի տվյալները</button>
+        <a class="checkout-contact" href="tel:+37433638866"><span data-i18n="contactShop">Կապվել խանութի հետ</span> · 033 63 88 66</a>
+      </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="co-overlay" id="ordOverlay"></div>
+  <div class="co-modal" id="ordModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="ordTitle">
+    <div class="co-box orders-box">
+      <button class="qv-close" id="ordClose" type="button" aria-label="Փակել" data-i18n-aria="close">×</button>
+      <h3 id="ordTitle" data-i18n="ordersTitle">Իմ պատվերները</h3>
+      <p class="local-note" data-i18n="ordersLocalNote"></p>
+      <form id="orderFindForm" class="order-find"><label for="orderFindInput" class="sr-only" data-i18n="orderCode">Պատվերի համար</label><input id="orderFindInput" type="search" data-i18n-ph="orderFindPh" autocomplete="off"><button class="cta-btn" type="submit" data-i18n="orderFind">Գտնել</button></form>
+      <p id="orderNotFound" class="local-note" data-i18n="orderNotFound" hidden></p>
+      <button id="orderClearFind" class="text-button" type="button" data-i18n="orderClearFind" hidden>Ցույց տալ բոլորը</button>
+      <p id="ordEmpty" data-i18n="ordersEmpty">Դեռ պատվերներ չկան։</p>
+      <div id="ordList" class="ord-list"></div>
+    </div>
+  </div>
+
+  <div class="done-overlay" id="doneOverlay"></div>
+
+  <div class="done-modal" id="doneModal" role="alertdialog" aria-modal="true" aria-hidden="true">
+    <div class="done-box">
+      <p class="done-title" id="doneTitle" data-i18n="doneTitle">Պատվերը ընդունված է։</p>
+      <p class="done-sub" data-i18n="doneSub">
+        Շնորհակալություն պատվերի համար։ Մեր աշխատակիցը կկապվի Ձեզ հետ։
+      </p>
+      <button class="cta-btn" id="doneClose" type="button" data-i18n="doneOk">Լավ</button>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <div class="qv-overlay" id="qvOverlay"></div>
+
+  <div class="qv-modal" id="qvModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="qv-full">
+      <div class="qv-topbar">
+        <span class="qv-topbar-title" data-i18n="qvTopTitle">Ապրանք</span>
+
+        <span class="qv-top-actions">
+          <button class="qv-share" id="qvShare" type="button" aria-expanded="false" aria-controls="sharePanel" data-i18n="shareButton" data-i18n-aria="shareLabel">Կիսվել</button>
+          <button class="qv-close" id="qvClose" type="button" aria-label="Փակել" data-i18n-aria="close"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+        </span>
+      </div>
+
+
+      <div id="sharePanel" class="share-panel" role="dialog" aria-labelledby="shareTitle" hidden>
+        <button id="shareClose" class="share-close" type="button" data-i18n-aria="close" aria-label="Փակել">×</button>
+        <h4 id="shareTitle" data-i18n="shareTitle">Որտե՞ղ կիսվել</h4>
+        <p data-i18n="shareIntro"></p>
+        <div class="share-apps">
+          <a id="shareTelegram" target="_blank" rel="noopener noreferrer">Telegram</a>
+          <a id="shareViber">Viber</a>
+          <a id="shareWhatsApp" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+        </div>
+        <label for="shareUrl" class="sr-only" data-i18n="shareLink">Ապրանքի ուղիղ հղումը</label>
+        <input id="shareUrl" type="url" readonly spellcheck="false">
+        <button id="shareCopy" class="cta-btn" type="button" data-i18n="shareCopy">Պատճենել հղումը</button>
+        <button id="shareMore" class="text-button" type="button" data-i18n="shareMore" hidden>Այլ հավելվածներ…</button>
+        <p id="shareMessage" class="share-message" role="status"></p>
+        <small data-i18n="shareViberHint"></small>
+      </div>
+      <div class="qv-scroll">
+        <div class="qv-hero">
+          <div class="qv-media" id="qvMedia">
+            <img class="qv-img" id="qvImg" alt="">
+          </div>
+
+          <div class="qv-info">
+            <span class="product-badge qv-badge" id="qvBadge"></span>
+            <p class="product-type" id="qvType"></p>
+            <h3 class="product-name" id="qvName"></h3>
+            <div class="qv-rating">
+              <span class="stars" id="qvTopStars"><svg class="star off" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star off" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star off" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star off" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star off" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+              <span id="qvRatingText" data-i18n="qvNoRating">Դեռ գնահատական չկա</span>
+            </div>
+            <p class="price" id="qvPrice"></p>
+            <p class="availability" id="qvAvail"></p>
+            <p class="qv-label" data-i18n="qvAbout">Նկարագրություն</p>
+            <p class="qv-desc" id="qvDesc"></p>
+            <p class="qv-label" data-i18n="qvSpecsT">Բնութագրեր</p>
+            <p class="product-specs" id="qvSpecs"></p>
+            <p class="qv-label" data-i18n="qvDeliveryT">Ստացում</p>
+            <p class="qv-delivery" id="qvEta"></p>
+            <button id="qvCustom" type="button" class="custom-product-button" data-i18n="customFromProduct">Ուզում եմ այս մոդելը՝ իմ տարբերակով</button>
+          </div>
+        </div>
+
+        <div class="qv-reviews">
+          <h4 class="qv-reviews-title" data-i18n="revTitle2">Կարծիքներ</h4>
+          <p class="qv-empty" id="qvRevEmpty" data-i18n="revEmpty">Դեռ կարծիքներ չկան։</p>
+          <div id="qvRevList" class="qv-rev-list"></div>
+
+          <form id="qvRevForm" class="qv-rev-form" novalidate>
+            <div class="field">
+              <label for="qvRevName" data-i18n="revName">Ձեր անունը</label>
+              <input id="qvRevName" type="text" placeholder="Անի" data-i18n-ph="reviewNamePh">
+            </div>
+
+            <div class="field">
+              <span class="co-label" data-i18n="qvRateMe">Գնահատեք ապրանքը</span>
+              <div class="qv-stars" id="qvRevStars" role="radiogroup">
+                <button type="button" data-star="1" aria-label="1"><svg class="star" width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+                <button type="button" data-star="2" aria-label="2"><svg class="star" width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+                <button type="button" data-star="3" aria-label="3"><svg class="star" width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+                <button type="button" data-star="4" aria-label="4"><svg class="star" width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+                <button type="button" data-star="5" aria-label="5"><svg class="star" width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="qvRevText" data-i18n="revText">Ձեր կարծիքը</label>
+              <textarea id="qvRevText" rows="2"></textarea>
+            </div>
+
+            <button type="submit" class="cta-btn ghost-dark" data-i18n="revSend">Ուղարկել կարծիքը</button>
+          </form>
+        </div>
+
+        <div class="qv-similar">
+          <h4 class="qv-reviews-title" data-i18n="qvSimilar">Նման ապրանքներ</h4>
+          <div class="qv-sim-grid" id="qvSimGrid"></div>
+        </div>
+      </div>
+
+      <div class="qv-footer">
+        <p class="price" id="qvPriceFoot"></p>
+        <button class="btn-add-cart" id="qvAdd" type="button" data-i18n="add">Ավելացնել զամբյուղ</button>
+        <button class="btn-buy-now" id="qvBuy" type="button" data-i18n="qvBuyNow">Հիմա գնել</button>
+      </div>
+    </div>
+  </div>
+
+  <button class="back-to-top" id="backToTop" type="button" aria-label="Վերև" hidden data-i18n-aria="aTop"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+
+  <script defer src="lang.js?v=77"></script>
+  <script defer src="catalog-products.js?v=74"></script>
+  <script defer src="photo-products.js?v=74"></script>
+  <script defer src="script.js?v=77"></script>
+</body>
+</html>
