@@ -2607,3 +2607,14 @@ html {
   color: #0041c2;
   filter: none;
 }
+
+
+/* Compact product cards; keep product photos uncropped. */
+.product-card { border-radius: 16px; contain-intrinsic-size: auto 350px; }
+.product-card .product-media { aspect-ratio: 5 / 4; }
+.product-card .product-info { padding: 10px; }
+.product-card .price { margin: 0 0 4px; }
+.product-card .product-actions { gap: 6px; padding-top: 8px; }
+.product-card .btn-add-cart,
+.product-card .btn-mark { min-height: 44px; padding: 8px 10px; }
+
