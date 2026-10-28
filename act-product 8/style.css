@@ -2728,7 +2728,6 @@ html {
 .finder-selection-image { background: #f3f1ec; }
 .finder-icon-button { flex: none; width: 36px; min-height: 40px; border: 0; background: transparent; color: #777167; font-size: 1.3rem; cursor: pointer; }
 
-[data-contact-placeholder] { cursor: default; pointer-events: none; }
 @media (max-width: 500px) {
   .hero-actions { gap: 10px; }
   .hero-actions .cta-btn { min-height: 54px; padding: 12px 10px; font-size: .85rem; }
