@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&family=Noto+Sans+Armenian:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=83">
+  <link rel="stylesheet" href="style.css?v=84">
 </head>
 
 <body>
@@ -141,30 +141,18 @@
           </div>
           <div class="custom-fields custom-product-row">
           <div class="field product-finder" id="productFinder">
-            <label id="customProductLabel" for="productPickerSearch" data-i18n="customProduct">Ո՞ր ապրանքի հիման վրա</label>
+            <span id="customProductLabel" class="co-label" data-i18n="customProduct">Ընտրված ապրանքը</span>
             <input id="customProduct" name="product" type="hidden" value="">
-            <div id="finderInputArea" class="finder-input-zone">
-              <div class="finder-input-shell">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
-                <input id="productPickerSearch" class="finder-input" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="productPickerList" aria-describedby="finderHint" autocomplete="off" data-i18n-ph="pickerInputPh" placeholder="Փնտրիր ապրանք կամ տեսակ…">
-                <button id="productPickerClear" class="finder-icon-button" type="button" tabindex="-1" data-i18n-aria="aClearSearch" aria-label="Մաքրել որոնումը" hidden>×</button>
-                <button id="productPickerToggle" class="finder-icon-button" type="button" tabindex="-1" aria-label="Ցուցադրել ապրանքները" data-i18n-aria="pickerOpen"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
-              </div>
-              <div id="productPickerPanel" class="finder-panel" hidden>
-                <div class="finder-panel-heading"><span data-i18n="pickerProducts">Ապրանքներ</span><span id="productPickerCount" role="status"></span></div>
-                <ul id="productPickerList" role="listbox" class="finder-list" aria-label="Ապրանքներ" data-i18n-aria="pickerProducts"></ul>
-                <p id="productPickerEmpty" class="finder-empty" data-i18n="pickerEmpty" hidden>Ապրանք չգտնվեց։ Փորձիր այլ անուն կամ տեսակ։</p>
-                <button id="productPickerIdea" class="finder-own-idea" type="button"><span aria-hidden="true">＋</span><span data-i18n="pickerOwnIdea">Իմ գաղափարով</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></button>
-              </div>
+            <div id="customProductPrompt" class="custom-product-prompt">
+              <p data-i18n="customProductHint">Ընտրիր ապրանք տեսականուց կամ ներքևում նկարագրիր նոր գաղափարդ։</p>
+              <a href="#products" data-i18n="chooseFromCatalog">Ընտրել տեսականուց</a>
             </div>
             <div id="finderSelection" class="finder-selection" hidden>
               <span id="customProductVisual" class="finder-selection-image" aria-hidden="true"></span>
               <span class="finder-selection-copy"><small id="customProductCategory"></small><strong id="customProductName"></strong></span>
-              <button id="customProductChange" class="finder-change" type="button" data-i18n="pickerChange">Փոխել</button>
+              <a href="#products" id="customProductChange" class="finder-change" data-i18n="pickerChange">Փոխել</a>
               <button id="customProductRemove" class="finder-icon-button" type="button" aria-label="Հեռացնել ընտրությունը" data-i18n-aria="pickerRemove">×</button>
             </div>
-            <small id="finderHint" class="finder-hint" data-i18n="pickerInputHint">Օրինակ՝ բարձ, բաժակ կամ տեքստիլ</small>
-            <small id="finderError" class="finder-error" role="alert" data-i18n="pickerChooseError" hidden>Ընտրիր ապրանքը ցանկից կամ նշիր «Իմ գաղափարով»։</small>
           </div>
 
           <div class="field"><label for="customQuantity" data-i18n="customQuantity">Քանակ</label><input id="customQuantity" name="quantity" type="number" min="1" max="100" value="1" inputmode="numeric" required></div>
@@ -396,6 +384,16 @@
             </div>
             <p class="price" id="qvPrice"></p>
             <p class="availability" id="qvAvail"></p>
+            <div id="qvColorOptions" class="product-colors-detail">
+              <p class="color-option-label"><span data-i18n="colorsLabel">Գույն</span><strong id="qvColorName" aria-live="polite"></strong></p>
+              <div id="qvColorList" class="color-options" role="group" data-i18n-aria="colorsLabel" aria-label="Գույն"></div>
+              <button id="qvOtherColorToggle" class="other-color-toggle" type="button" aria-expanded="false" aria-controls="qvOtherColorArea" data-i18n="otherColor">Այլ գույն՝ պատվերով</button>
+              <div id="qvOtherColorArea" class="other-color-area" hidden>
+                <label for="qvOtherColor" data-i18n="customColor">Ցանկալի գույն</label>
+                <input id="qvOtherColor" type="text" maxlength="120" data-i18n-ph="otherColorPh" placeholder="Օրինակ՝ վարդագույն">
+                <small data-i18n="colorRequestNote">Այլ գույնի հնարավորությունը և գինը կճշտենք քեզ հետ։</small>
+              </div>
+            </div>
             <p class="qv-label" data-i18n="qvAbout">Նկարագրություն</p>
             <p class="qv-desc" id="qvDesc"></p>
             <p class="qv-label" data-i18n="qvSpecsT">Բնութագրեր</p>
@@ -447,6 +445,7 @@
         <p class="price" id="qvPriceFoot"></p>
         <button class="btn-add-cart" id="qvAdd" type="button" data-i18n="add">Ավելացնել զամբյուղ</button>
         <button class="btn-buy-now" id="qvBuy" type="button" data-i18n="qvBuyNow">Հիմա գնել</button>
+        <button class="btn-buy-now" id="qvRequestColor" type="button" data-i18n="customFromProduct" hidden>Պատվիրել իմ տարբերակով</button>
       </div>
     </div>
   </div>
@@ -462,10 +461,10 @@
       <button id="analyticsAllow" type="button" data-i18n="analyticsAllow">Թույլատրել</button>
     </div>
   </section>
-  <script defer src="lang.js?v=81"></script>
-  <script defer src="catalog-products.js?v=74"></script>
+  <script defer src="lang.js?v=84"></script>
+  <script defer src="catalog-products.js?v=84"></script>
   <script defer src="photo-products.js?v=74"></script>
-  <script defer src="script.js?v=81"></script>
+  <script defer src="script.js?v=84"></script>
   <script defer src="analytics.js?v=79"></script>
 </body>
 </html>
