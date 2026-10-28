@@ -397,7 +397,6 @@
             markBtn.classList.add('picked');
             markBtn.innerHTML = markHTML(true);
           }
-          delete mcard._t; delete mcard._l; delete mcard._d;
           if (activeFilter === 'sel') {
             if (!selectedCount()) {
               activeFilter = 'all';
@@ -453,9 +452,8 @@
     if (!names.length) return;
     var added = 0;
     names.forEach(function (n) {
-      for (var i = 0; i < PRODUCTS.length; i++) {
-        if (PRODUCTS[i].hy.name === n) { addToCart(n, PRODUCTS[i].price, PRODUCTS[i].cat, true); added++; break; }
-      }
+      var product = productByName[n];
+      if (product) { addToCart(n, product.price, product.cat, true); added++; }
     });
     clearSelection();
     showToast(t('addedMany', { n: added }));
@@ -467,34 +465,43 @@
     openCheckout();
   });
 
-  /* ---------- 5. Catalog: 50 products, data-driven ---------- */
+  /* ---------- 5. Catalog and reusable product indexes ---------- */
   var PRODUCTS = (window.ACT_PHOTO_PRODUCTS || []).concat(window.ACT_CATALOG_PRODUCTS || []);
   var colorChoices = {}, requestedColors = {}, colorRequestModes = {};
+  var productById = Object.create(null), productByName = Object.create(null), productIndexById = Object.create(null);
+  var colorGroups = Object.create(null), catalogItems = [], catalogByCategory = Object.create(null);
+  var cardsByKey = Object.create(null), searchByKey = Object.create(null);
+  PRODUCTS.forEach(function (p, index) {
+    productById[p.id] = p; productByName[p.hy.name] = p; productIndexById[p.id] = index;
+    var key = p.colorGroup || p.id;
+    if (!colorGroups[key]) {
+      colorGroups[key] = []; catalogItems.push(p);
+      (catalogByCategory[p.cat] || (catalogByCategory[p.cat] = [])).push(p);
+    }
+    colorGroups[key].push(p);
+  });
   function colorVariants(product) {
-    return product.colorGroup ? PRODUCTS.filter(function (p) { return p.colorGroup === product.colorGroup; }) : [product];
+    return colorGroups[product.colorGroup || product.id];
   }
   function catalogProducts() {
-    var seen = {};
-    return PRODUCTS.filter(function (p) { var key = p.colorGroup || p.id; if (seen[key]) return false; seen[key] = true; return true; });
+    return catalogItems;
   }
-  function colorSwatch(product, chosen, target) {
+  function colorSwatch(product, chosen) {
     var button = document.createElement('button'); button.type = 'button'; button.className = 'color-swatch';
-    button.dataset.colorProduct = product.id; button.dataset.colorTarget = target;
+    button.dataset.colorProduct = product.id;
     button.setAttribute('aria-label', product.color[lang]); button.setAttribute('aria-pressed', String(chosen));
     var dot = document.createElement('span'); dot.style.backgroundColor = product.color.hex; dot.setAttribute('aria-hidden','true');
     button.appendChild(dot); var label = document.createElement('span'); label.className = 'sr-only'; label.textContent = product.color[lang]; button.appendChild(label);
     return button;
   }
   function cardForProduct(product) {
-    return productCards.find(function (card) { var p = PRODUCTS[Number(card.dataset.index)]; return p.id === product.id || product.colorGroup && p.colorGroup === product.colorGroup; });
+    return cardsByKey[product.colorGroup || product.id];
   }
   function chooseCardColor(card, product) {
     if (product.colorGroup) colorChoices[product.colorGroup] = product.id;
-    var replacement = buildCard(product, PRODUCTS.indexOf(product)); replacement.hidden = card.hidden;
-    card.replaceWith(replacement); productCards = $$('.product-card'); return replacement;
+    var replacement = buildCard(product, productIndexById[product.id]); replacement.hidden = card.hidden;
+    card.replaceWith(replacement); productCards[productCards.indexOf(card)] = replacement; return replacement;
   }
-  var productByName = {};
-  PRODUCTS.forEach(function (p) { productByName[p.hy.name] = p; });
   function displayName(name) { var p = productByName[name]; return p ? p[lang].name : name; }
 
 
@@ -532,9 +539,7 @@
     var names = Object.keys(selected);
     var sum = 0;
     names.forEach(function (n) {
-      for (var i = 0; i < PRODUCTS.length; i++) {
-        if (PRODUCTS[i].hy.name === n) { sum += PRODUCTS[i].price; break; }
-      }
+      var product = productByName[n]; if (product) sum += product.price;
     });
     if (bar) bar.hidden = names.length === 0;
     if (cnt) cnt.textContent = t('selectedCount', { n: names.length });
@@ -571,15 +576,6 @@
     if (sec && sec.scrollIntoView) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
-  function productRating(name) {
-    var votes = [];
-    try { var r = Number(loadRatings()[name]); if (r) votes.push(r); } catch (e) {}
-    try { ((loadRevs()[name]) || []).forEach(function (rv) { if (rv.stars) votes.push(rv.stars); }); } catch (e) {}
-    if (!votes.length) return '<p class="card-rating new">' + starHTML(false, 14) + ' ' + t('isNew') + '</p>';
-    var avg = votes.reduce(function (a, b) { return a + b; }, 0) / votes.length;
-    return '<p class="card-rating">' + starHTML(true, 14) + ' ' + avg.toFixed(1).replace('.', ',') + ' · ' + votes.length + '</p>';
-  }
-
   function buildCard(p, index) {
     var d = (lang === 'en') ? p.en : p.hy;
     var card = document.createElement('article');
@@ -590,7 +586,6 @@
     card.dataset.pending = p.price == null ? 'true' : 'false';
     if (p.gallery) card.classList.add('photo-product');
     var badgeText = t(p.badge);
-    var stockClass = p.badge === 'bMade' ? 'avail-made' : (p.badge === 'bUnique' ? 'avail-last' : 'avail-in');
     var safeName = d.name.replace(/"/g, '&quot;');
     var disc = (p.old && p.old > p.price) ? Math.round((1 - p.price / p.old) * 100) : 0;
     card.innerHTML =
@@ -600,11 +595,7 @@
       '<svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true"><path d="M12 21C7 16.5 3 13 3 8.8 3 6 5.2 4 7.8 4c1.7 0 3.2.9 4.2 2.3C13 4.9 14.5 4 16.2 4 18.8 4 21 6 21 8.8c0 4.2-4 7.7-9 12.2z"/></svg></button>' +
       '<img class="product-art" src="' + (p.thumb || p.img) + '" alt="' + safeName + '" width="480" height="480" loading="lazy" decoding="async">' + (p.gallery ? '<span class="gallery-count">' + t(p.gallery.some(function (m) { return m.type === 'video'; }) ? 'galleryMedia' : p.gallery.length === 1 ? 'galleryImage' : 'galleryImages', { n: p.gallery.filter(function (m) { return m.type === 'image'; }).length }) + '</span>' : '') + '</div>' +
       '<div class="product-info"><h3 class="product-name">' + (p.groupName ? p.groupName[lang] : d.name) + '</h3>' +
-      '<p class="product-type">' + d.type + '</p>' +
-      '<p class="product-specs">' + d.specs + '</p>' +
       '<p class="price">' + formatPrice(p.price) + (p.old && p.old > p.price ? '<s class="old-price">' + formatPrice(p.old) + '</s>' : '') + '</p>' +
-      productRating(p.hy.name) +
-      '<p class="availability ' + stockClass + '"><span class="dot" aria-hidden="true"></span>' + d.avail + '</p>' +
       '<div class="product-actions"><button class="btn-add-cart" type="button" aria-label="' + t('add') + ': ' + safeName + '">' +
       '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>' +
       '<span>' + t('add') + '</span></button>' +
@@ -617,15 +608,17 @@
       var mark = card.querySelector('.btn-mark'); mark.disabled = true;
     }
     btn.dataset.category = p.cat;
+    cardsByKey[p.colorGroup || p.id] = card;
     return card;
   }
 
   function renderProducts() {
     if (!productsGrid) return;
     var frag = document.createDocumentFragment();
+    cardsByKey = Object.create(null);
     catalogProducts().forEach(function (base) {
-      var p = base.colorGroup ? PRODUCTS.find(function (v) { return v.id === colorChoices[base.colorGroup]; }) || base : base;
-      frag.appendChild(buildCard(p, PRODUCTS.indexOf(p)));
+      var p = base.colorGroup ? productById[colorChoices[base.colorGroup]] || base : base;
+      frag.appendChild(buildCard(p, productIndexById[p.id]));
     });
     productsGrid.innerHTML = '';
     productsGrid.appendChild(frag);
@@ -669,14 +662,13 @@
       }
       if (!matchesCategory) return false;
       if (!rawQ) return true;
-      if (card._t === undefined) {
-        var p = PRODUCTS[Number(card.dataset.index)];
-        card._t = colorVariants(p).map(function (v) { return Object.values(v.hy).join(' ') + ' ' + Object.values(v.en).join(' ') + ' ' + (v.price == null ? '' : v.price); }).join(' ').toLocaleLowerCase('hy-AM');
-        card._l = latFold(toLatin(card._t));
-        card._d = card._t.replace(/[,\s․]/g, '');
+      var product = PRODUCTS[Number(card.dataset.index)], key = product.colorGroup || product.id;
+      var search = searchByKey[key];
+      if (!search) {
+        var text = colorVariants(product).map(function (v) { return Object.values(v.hy).join(' ') + ' ' + Object.values(v.en).join(' ') + ' ' + (v.price == null ? '' : v.price); }).join(' ').toLocaleLowerCase('hy-AM');
+        search = searchByKey[key] = {text:text, latin:latFold(toLatin(text)), digits:text.replace(/[,\s․]/g,'')};
       }
-      return card._t.indexOf(q) !== -1 || card._l.indexOf(qlat) !== -1 ||
-        (qdig && card._d.indexOf(qdig) !== -1);
+      return search.text.indexOf(q) !== -1 || search.latin.indexOf(qlat) !== -1 || (qdig && search.digits.indexOf(qdig) !== -1);
     });
   }
 
@@ -1087,9 +1079,11 @@
     galleryIndex = 0; galleryAlt = alt || '';
     qvMedia.classList.toggle('has-gallery', galleryItems.length > 1);
     var video = $('#qvVideo');
-    if (!video) {
+    if (!video && galleryItems.some(function (item) { return item.type === 'video'; })) {
       video = document.createElement('video'); video.id = 'qvVideo'; video.className = 'qv-video';
       video.controls = false; video.autoplay = true; video.muted = true; video.loop = true; video.playsInline = true; video.preload = 'metadata'; qvMedia.appendChild(video);
+    }
+    if (galleryItems.length > 1 && !$('#galleryThumbs')) {
       var controls = document.createElement('div'); controls.className = 'gallery-controls';
       controls.innerHTML = '<button type="button" id="galleryPrev">‹</button><span id="galleryPosition" aria-live="polite"></span><button type="button" id="galleryNext">›</button>';
       qvMedia.appendChild(controls);
@@ -1104,10 +1098,12 @@
       qvImg.addEventListener('touchstart', function (e) { startX = e.changedTouches[0].clientX; }, {passive:true});
       qvImg.addEventListener('touchend', function (e) { var delta = e.changedTouches[0].clientX - startX; if (startX !== null && Math.abs(delta) > 45) showGallery(galleryIndex + (delta < 0 ? 1 : -1)); startX = null; }, {passive:true});
     }
-    $('#galleryPrev').setAttribute('aria-label', t('galleryPrev'));
-    $('#galleryNext').setAttribute('aria-label', t('galleryNext'));
-    var thumbs = $('#galleryThumbs'); thumbs.innerHTML = '';
-    galleryItems.forEach(function (item, i) {
+    if ($('#galleryPrev')) {
+      $('#galleryPrev').setAttribute('aria-label', t('galleryPrev'));
+      $('#galleryNext').setAttribute('aria-label', t('galleryNext'));
+    }
+    var thumbs = $('#galleryThumbs'); if (thumbs) thumbs.replaceChildren();
+    if (galleryItems.length > 1) galleryItems.forEach(function (item, i) {
       var btn = document.createElement('button'); btn.type = 'button';
       btn.setAttribute('aria-label', t(item.type === 'video' ? 'galleryVideo' : 'galleryPhoto') + ' ' + (i + 1));
       var thumb = document.createElement('img'); thumb.src = item.thumb || item.poster || item.src; thumb.width = 58; thumb.height = 58; thumb.alt = ''; btn.appendChild(thumb);
@@ -1119,15 +1115,15 @@
   function showGallery(index) {
     galleryIndex = (index + galleryItems.length) % galleryItems.length;
     var item = galleryItems[galleryIndex], video = $('#qvVideo');
-    video.pause(); video.removeAttribute('src'); video.load();
-    var isVideo = item.type === 'video'; video.hidden = !isVideo; qvImg.hidden = isVideo;
+    if (video && video.getAttribute('src')) { video.pause(); video.removeAttribute('src'); video.load(); }
+    var isVideo = item.type === 'video'; if (video) video.hidden = !isVideo; qvImg.hidden = isVideo;
     if (isVideo) {
       video.src = item.src; video.poster = item.poster || '';
       var playRequest = video.play(); if (playRequest && playRequest.catch) playRequest.catch(function () {});
     }
     else { qvImg.src = item.src; qvImg.alt = galleryAlt + ' — ' + (galleryIndex + 1); qvImg.style.opacity = '1'; }
-    $('#galleryPosition').textContent = (galleryIndex + 1) + ' / ' + galleryItems.length;
-    Array.from($('#galleryThumbs').children).forEach(function (btn, i) { btn.setAttribute('aria-pressed', String(i === galleryIndex)); });
+    if ($('#galleryPosition')) $('#galleryPosition').textContent = (galleryIndex + 1) + ' / ' + galleryItems.length;
+    Array.from($('#galleryThumbs') ? $('#galleryThumbs').children : []).forEach(function (btn, i) { btn.setAttribute('aria-pressed', String(i === galleryIndex)); });
   }
 
   function openQuickView(card, updateHistory) {
@@ -1136,10 +1132,6 @@
     var img = card.querySelector('.product-art');
     var addBtn = card.querySelector('.btn-add-cart');
     if (!img || !addBtn || !qvModal) return;
-    function cardText(sel) {
-      var el = card.querySelector(sel);
-      return el ? el.textContent : '';
-    }
     var product = PRODUCTS[Number(card.dataset.index)];
     if (window.ACTAnalytics) window.ACTAnalytics.viewProduct(product);
     var detail = lang === 'en' ? product.en : product.hy;
@@ -1149,26 +1141,21 @@
     openGallery(product, img.alt);
     var badgeEl = card.querySelector('.product-badge');
     if (qvBadge) qvBadge.textContent = badgeEl ? badgeEl.textContent : '';
-    if (qvType) qvType.textContent = cardText('.product-type');
-    if (qvName) qvName.textContent = cardText('.product-name');
+    if (qvType) qvType.textContent = detail.type;
+    if (qvName) qvName.textContent = product.groupName ? product.groupName[lang] : detail.name;
     if (qvPrice) qvPrice.textContent = formatPrice(product.price);
     var qvPriceFoot = $('#qvPriceFoot');
     if (qvPriceFoot) qvPriceFoot.textContent = formatPrice(product.price);
     if (qvSpecs) qvSpecs.textContent = detail.specs;
-    var availSrc = card.querySelector('.availability');
     if (qvAvail) {
-      if (availSrc) {
-        qvAvail.innerHTML = '<span class="dot" aria-hidden="true"></span>' + availSrc.textContent;
-        qvAvail.className = 'availability ' + (availSrc.classList.contains('avail-made') ? 'avail-made' : (availSrc.classList.contains('avail-last') ? 'avail-last' : 'avail-in'));
-      } else {
-        qvAvail.textContent = '';
-      }
+      qvAvail.textContent = detail.avail;
+      qvAvail.className = 'availability ' + (product.badge === 'bMade' ? 'avail-made' : product.badge === 'bUnique' ? 'avail-last' : 'avail-in');
+      var dot = document.createElement('span'); dot.className = 'dot'; dot.setAttribute('aria-hidden','true'); qvAvail.prepend(dot);
     }
     var qvDesc = $('#qvDesc');
     if (qvDesc) qvDesc.textContent = detail.desc || (CAT_DESC[cat] ? CAT_DESC[cat][lang === 'en' ? 'en' : 'hy'] : '');
     var qvEta = $('#qvEta');
     if (qvEta) {
-      var bkey = card.dataset.badge || 'bStock';
       qvEta.textContent = t('detailsPending');
     }
     qvAdd.dataset.name = addBtn.dataset.name;
@@ -1194,7 +1181,7 @@
 
   function renderQvColors(product) {
     var list = $('#qvColorList'); list.replaceChildren();
-    colorVariants(product).filter(function (p) { return !!p.color; }).forEach(function (p) { list.appendChild(colorSwatch(p,p.id === product.id,'detail')); });
+    colorVariants(product).filter(function (p) { return !!p.color; }).forEach(function (p) { list.appendChild(colorSwatch(p,p.id === product.id)); });
     $('#qvColorName').textContent = product.color ? product.color[lang] : '';
     $('.color-option-label').hidden = !product.color;
     list.hidden = !product.color;
@@ -1203,7 +1190,7 @@
   }
   $('#qvColorList').addEventListener('click',function (event) {
     var button = event.target.closest('[data-color-product]'); if (!button) return;
-    var product = PRODUCTS.find(function (p) { return p.id === button.dataset.colorProduct; });
+    var product = productById[button.dataset.colorProduct];
     colorRequestModes[product.id] = false;
     var card = chooseCardColor(cardForProduct(product), product); openQuickView(card);
     $('#qvColorList [data-color-product="' + product.id + '"]').focus({preventScroll:true});
@@ -1231,7 +1218,7 @@
     if (window.ACTAnalytics) window.ACTAnalytics.closeProduct();
     if (sharePanel) closeSharePanel(false);
     if (updateHistory !== false) syncProductUrl(null, false);
-    var playing = $('#qvVideo'); if (playing) { playing.pause(); playing.removeAttribute('src'); playing.load(); }
+    var playing = $('#qvVideo'); if (playing && playing.getAttribute('src')) { playing.pause(); playing.removeAttribute('src'); playing.load(); }
     qvModal.classList.remove('open');
     qvOverlay.classList.remove('open');
     qvModal.setAttribute('aria-hidden', 'true');
@@ -1527,7 +1514,7 @@
   function renderCustomProducts() {
     $('#referencePreview').alt = t('customAttachment');
     var file = $('#customReference').files[0]; $('#referenceFilename').textContent = file ? file.name : t('customNoReference');
-    var selected = PRODUCTS.find(function (p) { return p.id === $('#customProduct').value; });
+    var selected = productById[$('#customProduct').value];
     $('#finderSelection').hidden = !selected; $('#customProductPrompt').hidden = !!selected;
     $('#customProductName').textContent = selected ? selected[lang].name : '';
     $('#customProductCategory').textContent = selected ? t(FILTER_TITLE[selected.cat]) : '';
@@ -1644,7 +1631,7 @@
       el.appendChild(date);
       var items = document.createElement('p'); items.className = 'ord-items';
       if (order.type === 'custom') {
-        var product = PRODUCTS.find(function (p) { return p.id === order.productId; });
+        var product = productById[order.productId];
         items.textContent = t('customRequestType') + (product ? ' · ' + product[lang].name : '') + ' × ' + order.quantity;
       } else items.textContent = (order.items || []).map(function (it) { return displayName(it.n) + ' × ' + it.q; }).join('; ');
       el.appendChild(items);
@@ -1677,7 +1664,7 @@
   function openProductFromUrl() {
     var id = new URL(location.href).searchParams.get('product');
     var legacy = /^#p-(\d+)$/.exec(location.hash || '');
-    var product = id ? PRODUCTS.find(function (p) { return p.id === id; }) : legacy ? PRODUCTS[Number(legacy[1])] : null;
+    var product = id ? productById[id] : legacy ? PRODUCTS[Number(legacy[1])] : null;
     if (product) {
       var card = cardForProduct(product);
       if (card) { if (PRODUCTS[Number(card.dataset.index)].id !== product.id) card = chooseCardColor(card,product); openQuickView(card, false); }
@@ -1693,8 +1680,8 @@
     grid.innerHTML = '';
     var items = [];
     var current = productByName[currentName];
-    catalogProducts().forEach(function (p) {
-      if (p.cat === cat && p.hy.name !== currentName && !(current && current.colorGroup && current.colorGroup === p.colorGroup)) items.push({p:p,i:PRODUCTS.indexOf(p)});
+    (catalogByCategory[cat] || []).forEach(function (p) {
+      if ( p.hy.name !== currentName && !(current && current.colorGroup && current.colorGroup === p.colorGroup)) items.push({p:p,i:productIndexById[p.id]});
     });
     items.slice(0, 4).forEach(function (it) {
       var d = (lang === 'en') ? it.p.en : it.p.hy;
@@ -1816,13 +1803,8 @@
 
   /* ---------- 7c. URL params (?q=, ?cat=) — 404.html-ը հղում է այսպես ---------- */
   function applyUrlParams() {
-    var params = {};
-    try {
-      location.search.replace(/^\?/, '').split('&').forEach(function (pair) {
-        var kv = pair.split('=');
-        if (kv[0]) params[decodeURIComponent(kv[0])] = decodeURIComponent((kv[1] || '').replace(/\+/g, ' '));
-      });
-    } catch (e) {}
+    var query = new URLSearchParams(location.search);
+    var params = {cat:query.get('cat'), q:query.get('q')};
     var validCats = ['all', 'textile', 'art', 'accessory', 'ceramic', 'cs', 'digitalart', 'engineer', 'fav', 'sel'];
     if (params.cat && validCats.indexOf(params.cat) !== -1 && params.cat !== 'all') {
       activeFilter = params.cat;
