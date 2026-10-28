@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&family=Noto+Sans+Armenian:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=84">
+  <link rel="stylesheet" href="style.css?v=85">
 </head>
 
 <body>
@@ -52,7 +52,7 @@
         </p>
 
         <div class="hero-actions">
-          <a href="#custom" class="hero-custom-link" data-i18n="customNav">Պատվերով պատրաստում</a>
+          <a href="#custom" class="cta-btn" data-i18n="customNav">Պատվերով պատրաստում</a>
           <a href="#products" class="cta-btn" data-i18n="heroBtn1">Դիտել տեսականին</a>
         </div>
 
@@ -131,7 +131,7 @@
           <p data-i18n="customIntro">Նշիր ցանկալի գույնը, չափերը և մանրամասները։ Կարող ես կցել օրինակ նկար։</p>
           <div class="custom-meta">
           <p class="local-note" data-i18n="customLocalNote"></p>
-          <a class="contact-shop" href="tel:+37433638866"><span data-i18n="contactShop">Կապվել խանութի հետ</span> · 033 63 88 66</a>
+          <span class="contact-shop"  data-contact-placeholder><span data-i18n="contactShop">Կապվել խանութի հետ</span> · 00 00 00</span>
           </div>
         </div>
         <form id="customForm" class="custom-form" novalidate>
@@ -196,10 +196,10 @@
         </div>
 
         <div class="foot-contacts">
-          <a href="tel:+37433638866" class="foot-contact">
+          <span  class="foot-contact" data-contact-placeholder>
             <span class="foot-icon"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
-            <span><strong data-i18n="footPhone">Հեռախոս</strong><small>033 63 88 66</small></span>
-          </a>
+            <span><strong data-i18n="footPhone">Հեռախոս</strong><small>00 00 00</small></span>
+          </span>
 
           <a href="mailto:info@actproduct.am" class="foot-contact">
             <span class="foot-icon"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></span>
@@ -304,7 +304,7 @@
 
         <p class="checkout-local-note" data-i18n="coLocalNote">Տվյալները կպահպանվեն այս բրաուզերում։ Պատվերը հաստատելու համար կապվիր մեզ հետ։</p>
         <button type="submit" class="cta-btn cart-checkout" data-i18n="coSubmit">Պահպանել պատվերի տվյալները</button>
-        <a class="checkout-contact" href="tel:+37433638866"><span data-i18n="contactShop">Կապվել խանութի հետ</span> · 033 63 88 66</a>
+        <span class="checkout-contact"  data-contact-placeholder><span data-i18n="contactShop">Կապվել խանութի հետ</span> · 00 00 00</span>
       </form>
       </div>
     </div>
@@ -464,7 +464,7 @@
   <script defer src="lang.js?v=84"></script>
   <script defer src="catalog-products.js?v=84"></script>
   <script defer src="photo-products.js?v=74"></script>
-  <script defer src="script.js?v=84"></script>
+  <script defer src="script.js?v=85"></script>
   <script defer src="analytics.js?v=79"></script>
 </body>
 </html>

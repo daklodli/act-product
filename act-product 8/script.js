@@ -380,14 +380,6 @@
   var productsGrid = $('#productsGrid');
   if (productsGrid) {
     productsGrid.addEventListener('click', function (event) {
-      var colorButton = event.target.closest('[data-color-product]');
-      if (colorButton) {
-        var colorProduct = PRODUCTS.find(function (p) { return p.id === colorButton.dataset.colorProduct; });
-        var replacement = chooseCardColor(colorButton.closest('.product-card'), colorProduct);
-        replacement.querySelector('[data-color-product="' + colorProduct.id + '"]').focus({preventScroll:true});
-        if (activeSort !== 'default') applySort();
-        return;
-      }
       var markBtn = event.target.closest('.btn-mark');
       if (markBtn) {
         var mcard = markBtn.closest('.product-card');
@@ -625,14 +617,6 @@
       var mark = card.querySelector('.btn-mark'); mark.disabled = true;
     }
     btn.dataset.category = p.cat;
-    if (p.colorGroup) {
-      var colorBlock = document.createElement('div'); colorBlock.className = 'card-color-picker';
-      var colorLabel = document.createElement('p'); colorLabel.className = 'card-color-label'; colorLabel.textContent = t('colorsLabel') + ': ' + p.color[lang];
-      var colorList = document.createElement('div'); colorList.className = 'color-options'; colorList.setAttribute('role','group'); colorList.setAttribute('aria-label',t('colorsLabel'));
-      colorVariants(p).forEach(function (v) { colorList.appendChild(colorSwatch(v,v.id === p.id,'card')); });
-      colorBlock.appendChild(colorLabel); colorBlock.appendChild(colorList);
-      card.querySelector('.product-name').insertAdjacentElement('afterend',colorBlock);
-    }
     return card;
   }
 

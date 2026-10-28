@@ -390,15 +390,22 @@ h2 {
 }
 
 .hero-actions {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: min(100%, 520px);
+  align-items: stretch;
   gap: 12px;
 }
 
 .hero-actions .cta-btn {
+  width: 100%;
   min-height: 54px;
-  padding: 14px 34px;
+  padding: 14px 16px;
   font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: normal;
+  text-align: center;
   border-radius: 14px;
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
 }
@@ -2516,7 +2523,6 @@ html {
 }
 
 /* Custom requests and order progress. */
-.hero-custom-link { color: #fff; text-decoration: underline; text-underline-offset: 6px; font-size: .92rem; }
 .custom-section { padding: 32px 0; border-top: 1px solid var(--border); background: #f2efe7; }
 .custom-layout { width: min(1000px, calc(100% - 48px)); padding: 24px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; border: 1px solid var(--border); border-radius: 18px; background: #fff; }
 .custom-copy { position: static; align-self: start; min-width: 0; }
@@ -2697,8 +2703,6 @@ html {
 
 
 /* Product color variants share one catalog card. */
-.card-color-picker { margin: 3px 0 10px; }
-.card-color-label { margin: 0 0 5px; font-size: .72rem; color: #6c685f; }
 .color-options { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; }
 .color-swatch { display: grid; place-items: center; width: 36px; height: 36px; padding: 4px; border: 1px solid transparent; border-radius: 50%; background: transparent; cursor: pointer; }
 .color-swatch > span:first-child { width: 24px; height: 24px; border: 1px solid rgba(0,0,0,.12); border-radius: 50%; }
@@ -2723,3 +2727,9 @@ html {
 .finder-selection { border-color: #d8d4cb; background: #fff; }
 .finder-selection-image { background: #f3f1ec; }
 .finder-icon-button { flex: none; width: 36px; min-height: 40px; border: 0; background: transparent; color: #777167; font-size: 1.3rem; cursor: pointer; }
+
+[data-contact-placeholder] { cursor: default; pointer-events: none; }
+@media (max-width: 500px) {
+  .hero-actions { gap: 10px; }
+  .hero-actions .cta-btn { min-height: 54px; padding: 12px 10px; font-size: .85rem; }
+}
