@@ -1468,13 +1468,6 @@
   $('#customPhone').addEventListener('input', function () {
     var masked = maskAmPhone(this.value); if (masked !== null) this.value = masked; clearFieldError(this);
   });
-  function adjustCustomQuantity(amount) {
-    var input = $('#customQuantity'), value = Number(input.value);
-    input.value = Math.max(1, Math.min(100, (Number.isInteger(value) ? value : 1) + amount));
-    clearFieldError(input);
-  }
-  $('#customQtyMinus').addEventListener('click', function () { adjustCustomQuantity(-1); });
-  $('#customQtyPlus').addEventListener('click', function () { adjustCustomQuantity(1); });
   ['customName','customColor','customSize','customQuantity','customDetails'].forEach(function (id) {
     $('#' + id).addEventListener('input', function () { clearFieldError(this); });
   });
