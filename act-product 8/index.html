@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&family=Noto+Sans+Armenian:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=90">
+  <link rel="stylesheet" href="style.css?v=91">
 </head>
 
 <body>
@@ -44,11 +44,9 @@
       <div class="hero-shade"></div>
 
       <div class="wrap hero-content">
-        <h1 data-i18n="heroTitle">Քո գաղափարը՝ մեր ձեռքերով</h1>
+        <h1 data-i18n="heroTitle">Ստեղծված քեզ համար</h1>
 
-        <p class="lede" data-i18n="heroLede">
-          Գտիր քեզ դուր եկածը մեր տեսականուց կամ պատվիրիր քո պատկերացրած գույնով ու չափով։
-        </p>
+        <p class="lede" data-i18n="heroLede">Ընտրիր տեսականուց կամ պատվիրիր քո տարբերակը։</p>
 
         <div class="hero-actions">
           <a href="#custom" class="cta-btn hero-custom" data-i18n="customNav">Պատվերով պատրաստում</a>
@@ -136,7 +134,7 @@
             </div>
           </div>
 
-          <div class="field"><label for="customQuantity" data-i18n="customQuantity">Քանակ</label><input id="customQuantity" name="quantity" type="number" min="1" max="100" value="1" inputmode="numeric" required></div>
+          <div class="field"><label for="customQuantity" data-i18n="customQuantity">Քանակ</label><div class="quantity-field-control"><button id="customQtyMinus" type="button" aria-label="Պակասեցնել քանակը" data-i18n-aria="decreaseQty">−</button><input id="customQuantity" name="quantity" type="number" min="1" max="100" value="1" inputmode="numeric" required><button id="customQtyPlus" type="button" aria-label="Ավելացնել քանակը" data-i18n-aria="increaseQty">+</button></div></div>
           </div>
           <div class="custom-fields">
             <div class="field"><label for="customColor" data-i18n="customColor">Ցանկալի գույն</label><input id="customColor" name="color" maxlength="120" data-i18n-ph="customColorPh"></div>
@@ -307,8 +305,9 @@
 
   <div class="done-overlay" id="doneOverlay"></div>
 
-  <div class="done-modal" id="doneModal" role="alertdialog" aria-modal="true" aria-hidden="true">
+  <div class="done-modal" id="doneModal" role="alertdialog" aria-modal="true" aria-hidden="true" aria-labelledby="doneTitle">
     <div class="done-box">
+      <svg class="success-mark" viewBox="0 0 52 52" fill="none" aria-hidden="true"><circle class="success-ring" cx="26" cy="26" r="23" pathLength="1"/><path class="success-tick" d="m15 26 7 7 15-15" pathLength="1"/></svg>
       <p class="done-title" id="doneTitle" data-i18n="doneTitle">Պատվերը ընդունված է։</p>
       <p class="done-sub" data-i18n="doneSub">
         Շնորհակալություն պատվերի համար։ Մեր աշխատակիցը կկապվի Ձեզ հետ։
@@ -442,10 +441,10 @@
       <button id="analyticsAllow" type="button" data-i18n="analyticsAllow">Թույլատրել</button>
     </div>
   </section>
-  <script defer src="lang.js?v=90"></script>
+  <script defer src="lang.js?v=91"></script>
   <script defer src="catalog-products.js?v=84"></script>
   <script defer src="photo-products.js?v=74"></script>
-  <script defer src="script.js?v=90"></script>
+  <script defer src="script.js?v=91"></script>
   <script defer src="analytics.js?v=79"></script>
 </body>
 </html>

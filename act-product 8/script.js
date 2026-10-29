@@ -162,10 +162,11 @@
   var activeSort = 'default';
 
   /* ---------- 2. Toast ---------- */
-  function showToast(message) {
+  function showToast(message, success) {
     var toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.textContent = message;
+    toast.className = 'toast' + (success ? ' toast-success' : '');
+    if (success) toast.innerHTML = '<svg class="success-mark" viewBox="0 0 52 52" fill="none" aria-hidden="true"><circle class="success-ring" cx="26" cy="26" r="23" pathLength="1"/><path class="success-tick" d="m15 26 7 7 15-15" pathLength="1"/></svg>';
+    var copy = document.createElement('span'); copy.textContent = message; toast.appendChild(copy);
     toastContainer.appendChild(toast);
     window.setTimeout(function () {
       toast.classList.add('out');
@@ -356,7 +357,7 @@
     }
     saveCart();
     renderCart();
-    if (!silent) showToast(t('inCart', { n: displayName(name) }));
+    if (!silent) showToast(t('inCart', { n: displayName(name) }), true);
   }
 
   function changeQuantity(index, amount) {
@@ -455,7 +456,7 @@
       if (product) { addToCart(n, product.price, product.cat, true); added++; }
     });
     clearSelection();
-    showToast(t('addedMany', { n: added }));
+    showToast(t('addedMany', { n: added }), true);
   });
   if (selClear) selClear.addEventListener('click', clearSelection);
 
@@ -1467,6 +1468,13 @@
   $('#customPhone').addEventListener('input', function () {
     var masked = maskAmPhone(this.value); if (masked !== null) this.value = masked; clearFieldError(this);
   });
+  function adjustCustomQuantity(amount) {
+    var input = $('#customQuantity'), value = Number(input.value);
+    input.value = Math.max(1, Math.min(100, (Number.isInteger(value) ? value : 1) + amount));
+    clearFieldError(input);
+  }
+  $('#customQtyMinus').addEventListener('click', function () { adjustCustomQuantity(-1); });
+  $('#customQtyPlus').addEventListener('click', function () { adjustCustomQuantity(1); });
   ['customName','customColor','customSize','customQuantity','customDetails'].forEach(function (id) {
     $('#' + id).addEventListener('input', function () { clearFieldError(this); });
   });
@@ -1513,6 +1521,7 @@
       lastRequestCode = code; $('#customForm').reset(); clearReferencePreview();
       $('#customResultText').textContent = t('customSaved', {code:code}); $('#customResult').hidden = false;
       $('#customView').focus(); renderOrders();
+      showToast(t('customSaved', {code:code}), true);
     }).catch(function () { deleteReference(request.id); showToast(t('customSaveError')); }).finally(function () {
       customBusy = false; $('#customSubmit').disabled = false; $('#customSubmit').textContent = t('customSave');
     });
