@@ -119,8 +119,7 @@
   var cartFooter = $('#cartFooter');
   var cartTotal = $('#cartTotal');
   var cartCheckout = $('#cartCheckout');
-  var productSearch = $('#productSearch');
-  var searchClear = $('#searchClear');
+  var categoryPicker = $('#categoryPicker');
   var productCards = $$('.product-card');
   var filterButtons = $$('.filter-btn');
   var noResults = $('#noResults');
@@ -470,7 +469,7 @@
   var colorChoices = {}, requestedColors = {}, colorRequestModes = {};
   var productById = Object.create(null), productByName = Object.create(null), productIndexById = Object.create(null);
   var colorGroups = Object.create(null), catalogItems = [], catalogByCategory = Object.create(null);
-  var cardsByKey = Object.create(null), searchByKey = Object.create(null);
+  var cardsByKey = Object.create(null);
   PRODUCTS.forEach(function (p, index) {
     productById[p.id] = p; productByName[p.hy.name] = p; productIndexById[p.id] = index;
     var key = p.colorGroup || p.id;
@@ -625,85 +624,48 @@
     productCards = $$('.product-card');
   }
 
-  /* Latin → հայերեն որոնում. ապրանքի տեքստը դարձնում ենք latin, համեմատում ենք */
-  var HY2LAT = { 'ա':'a','բ':'b','գ':'g','դ':'d','ե':'e','զ':'z','է':'e','ը':'y','թ':'t','ժ':'zh','ի':'i','լ':'l','խ':'kh','ծ':'ts','կ':'k','հ':'h','ձ':'dz','ղ':'gh','ճ':'ch','մ':'m','յ':'y','ն':'n','շ':'sh','ո':'o','չ':'ch','պ':'p','ջ':'j','ռ':'r','ս':'s','վ':'v','տ':'t','ր':'r','ց':'c','ւ':'u','փ':'p','ք':'q','օ':'o','ֆ':'f','և':'ev' };
-  function toLatin(s) {
-    s = (s || '').toLocaleLowerCase('hy-AM');
-    var out = '';
-    for (var i = 0; i < s.length; i++) {
-      if (s.substr(i, 2) === 'ու') { out += 'u'; i++; continue; }
-      var ch = s[i];
-      out += (HY2LAT[ch] !== undefined) ? HY2LAT[ch] : ch;
-    }
-    return out;
-  }
-
-  /* Latin fold: jamanak=xorovac style spelling (zh→j, kh/gh→x, ts→c) */
-  function latFold(s) {
-    return (s || '').replace(/zh/g, 'j').replace(/kh/g, 'x').replace(/gh/g, 'x').replace(/ts/g, 'c');
-  }
-
-  /* ---------- 5b. Catalog filter/sort with show-more ---------- */
+  /* ---------- Catalog categories and sorting ---------- */
   function matchedCards() {
-    var rawQ = productSearch.value.trim();
-    var q = rawQ.toLocaleLowerCase('hy-AM');
-    var qlat = latFold(rawQ.toLowerCase());
-    var qdig = rawQ.replace(/[,\s․]/g, '');
     return productCards.filter(function (card) {
-      var matchesCategory;
-      if (activeFilter === 'fav') {
-        var nbf = card.querySelector('.btn-add-cart');
-        matchesCategory = nbf ? colorVariants(PRODUCTS[Number(card.dataset.index)]).some(function (v) { return isFav(v.hy.name); }) : false;
-      } else if (activeFilter === 'sel') {
-        var nbs = card.querySelector('.btn-add-cart');
-        matchesCategory = nbs ? colorVariants(PRODUCTS[Number(card.dataset.index)]).some(function (v) { return isSelected(v.hy.name); }) : false;
-      } else {
-        matchesCategory = activeFilter === 'all' || card.dataset.category === activeFilter;
-      }
-      if (!matchesCategory) return false;
-      if (!rawQ) return true;
-      var product = PRODUCTS[Number(card.dataset.index)], key = product.colorGroup || product.id;
-      var search = searchByKey[key];
-      if (!search) {
-        var text = colorVariants(product).map(function (v) { return Object.values(v.hy).join(' ') + ' ' + Object.values(v.en).join(' ') + ' ' + (v.price == null ? '' : v.price); }).join(' ').toLocaleLowerCase('hy-AM');
-        search = searchByKey[key] = {text:text, latin:latFold(toLatin(text)), digits:text.replace(/[,\s․]/g,'')};
-      }
-      return search.text.indexOf(q) !== -1 || search.latin.indexOf(qlat) !== -1 || (qdig && search.digits.indexOf(qdig) !== -1);
+      var product = PRODUCTS[Number(card.dataset.index)];
+      if (activeFilter === 'fav') return colorVariants(product).some(function (v) { return isFav(v.hy.name); });
+      if (activeFilter === 'sel') return colorVariants(product).some(function (v) { return isSelected(v.hy.name); });
+      return activeFilter === 'all' || card.dataset.category === activeFilter;
     });
   }
 
   function filterProducts() {
-    var query = productSearch.value.trim().toLocaleLowerCase('hy-AM');
-    productCards.slice().forEach(function (card) {
-      var product = PRODUCTS[Number(card.dataset.index)]; if (!product.colorGroup) return;
-      var eligible = colorVariants(product).filter(function (v) {
-        if (activeFilter === 'fav' && !isFav(v.hy.name)) return false;
-        if (activeFilter === 'sel' && !isSelected(v.hy.name)) return false;
-        if (!query) return true;
-        var text = (v.hy.name + ' ' + v.en.name).toLocaleLowerCase('hy-AM');
-        return text.indexOf(query) !== -1 || latFold(toLatin(text)).indexOf(latFold(toLatin(query))) !== -1;
+    if (activeFilter === 'fav' || activeFilter === 'sel') {
+      productCards.slice().forEach(function (card) {
+        var product = PRODUCTS[Number(card.dataset.index)]; if (!product.colorGroup) return;
+        var eligible = colorVariants(product).filter(function (v) {
+          return activeFilter === 'fav' ? isFav(v.hy.name) : isSelected(v.hy.name);
+        });
+        if (eligible.length && !eligible.some(function (v) { return v.id === product.id; })) chooseCardColor(card, eligible[0]);
       });
-      if (eligible.length && !eligible.some(function (v) { return v.id === product.id; })) chooseCardColor(card,eligible[0]);
-    });
+    }
     var matched = matchedCards();
     productCards.forEach(function (card) { card.hidden = true; });
     matched.forEach(function (card) { card.hidden = false; });
     noResults.hidden = matched.length !== 0;
-    searchClear.hidden = !productSearch.value;
-    var query = productSearch.value.trim();
-    if (!matched.length) {
-      resultsCount.textContent = '';
-    } else if (query || activeFilter !== 'all') {
-      resultsCount.textContent = t('resultsFound', { n: matched.length });
-    } else {
-      resultsCount.textContent = t('resultsAll', { n: matched.length });
-    }
+    resultsCount.textContent = matched.length ? t(activeFilter === 'all' ? 'resultsAll' : 'resultsFound', { n: matched.length }) : '';
   }
+
+  document.addEventListener('click', function (event) {
+    if (categoryPicker.open && !categoryPicker.contains(event.target)) categoryPicker.open = false;
+  });
+  categoryPicker.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape' && categoryPicker.open) {
+      event.preventDefault(); categoryPicker.open = false;
+      categoryPicker.querySelector('summary').focus();
+    }
+  });
 
   filterButtons.forEach(function (button) {
     button.addEventListener('click', function () {
       activeFilter = button.dataset.filter;
-      productSearch.value = '';
+      categoryPicker.open = false;
+      categoryPicker.querySelector('summary').focus();
       filterButtons.forEach(function (item) {
         var isActive = item === button;
         item.classList.toggle('active', isActive);
@@ -717,7 +679,7 @@
     });
   });
 
-  var FILTER_TITLE = { all: 'catTitle', textile: 'fTextile', art: 'fArt', accessory: 'fAccessory', ceramic: 'fCeramic', cs: 'fCS', digitalart: 'fDigitalArt', engineer: 'fEngineer', fav: 'fFav', sel: 'selTitle' };
+  var FILTER_TITLE = { all: 'catalogAll', textile: 'fTextile', art: 'fArt', accessory: 'fAccessory', ceramic: 'fCeramic', cs: 'fCS', digitalart: 'fDigitalArt', engineer: 'fEngineer', fav: 'fFav', sel: 'selTitle' };
   function updateFilterCounts() {
     var counts = { all: catalogProducts().length, textile: 0, art: 0, accessory: 0, ceramic: 0, cs: 0, digitalart: 0, engineer: 0 };
     catalogProducts().forEach(function (p) { if (counts[p.cat] !== undefined) counts[p.cat]++; });
@@ -729,9 +691,9 @@
     updateFavBtn();
   }
   function refreshCatTitle() {
-    var el = $('#catTitle');
+    var el = $('#categoryPickerLabel');
     var stat = $('#productStat'); if (stat) stat.textContent = catalogProducts().length;
-    if (el) el.textContent = t(FILTER_TITLE[activeFilter] || 'catTitle');
+    if (el) el.textContent = t(activeFilter === 'all' ? 'catalogChoose' : FILTER_TITLE[activeFilter] || 'catalogChoose');
     document.body.classList.toggle('cat-filtered', activeFilter !== 'all');
   }
 
@@ -757,41 +719,6 @@
     activeSort = sortSelect.value;
     applySort();
     filterProducts();
-  });
-
-  productSearch.addEventListener('input', debounce(filterProducts, 120));
-
-  function submitProductSearch() {
-    filterProducts();
-    productSearch.blur();
-  }
-  $('#searchSubmit').addEventListener('click', submitProductSearch);
-
-  productSearch.addEventListener('keydown', function (event) {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      submitProductSearch();
-    }
-    if (event.key === 'Escape' && productSearch.value) {
-      productSearch.value = '';
-      filterProducts();
-      productSearch.blur();
-    }
-  });
-
-  // Press "/" anywhere to jump to search
-  document.addEventListener('keydown', function (event) {
-    var tag = (document.activeElement && document.activeElement.tagName) || '';
-    var isTyping = tag === 'INPUT' || tag === 'TEXTAREA';
-    if (event.key === '/' && !isTyping) {
-      event.preventDefault();
-      productSearch.focus();
-    }
-  });
-  searchClear.addEventListener('click', function () {
-    productSearch.value = '';
-    filterProducts();
-    productSearch.focus();
   });
 
   /* ---------- 6. Contact form ---------- */
@@ -1224,7 +1151,7 @@
     qvModal.setAttribute('aria-hidden', 'true');
     qvOverlay.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
-    if (restoreFocus !== false) productSearch.blur();
+    if (restoreFocus !== false && document.activeElement) document.activeElement.blur();
   }
 
   qvAdd.addEventListener('click', function () {
@@ -1804,7 +1731,7 @@
   /* ---------- 7c. URL params (?q=, ?cat=) — 404.html-ը հղում է այսպես ---------- */
   function applyUrlParams() {
     var query = new URLSearchParams(location.search);
-    var params = {cat:query.get('cat'), q:query.get('q')};
+    var params = {cat:query.get('cat')};
     var validCats = ['all', 'textile', 'art', 'accessory', 'ceramic', 'cs', 'digitalart', 'engineer', 'fav', 'sel'];
     if (params.cat && validCats.indexOf(params.cat) !== -1 && params.cat !== 'all') {
       activeFilter = params.cat;
@@ -1815,8 +1742,7 @@
       });
       refreshCatTitle();
     }
-    if (params.q && productSearch) productSearch.value = params.q;
-    if (params.cat || params.q) {
+    if (params.cat) {
       applySort();
       filterProducts();
     }
