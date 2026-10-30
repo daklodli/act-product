@@ -106,7 +106,8 @@ section { padding: 24px 0; }
 .product-actions { display: flex; flex-direction: column; gap: 8px; margin-top: auto; padding-top: 12px; }
 .btn-add-cart, .btn-mark { width: 100%; }
 .btn-mark { flex: 0 0 auto; min-height: 46px; padding: 10px 14px; border: 1.5px solid #131311; border-radius: 12px; background: #fff; color: #131311; font-size: 0.8rem; font-weight: 800; white-space: nowrap; cursor: pointer; }
-.btn-mark.picked { background: var(--grad); border-color: #131311; color: #fff; }
+.btn-mark.picked { background: #0041c2; border-color: #0041c2; color: #fff; }
+.btn-mark.picked:hover, .btn-mark.picked:focus-visible { background: #fff; border-color: #0041c2; color: #0041c2; }
 #selTotal { white-space: nowrap; }
 .product-media { cursor: pointer; }
 .qv-share { width: 38px; height: 38px; border: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.15); color: #fff; cursor: pointer; display: grid; place-items: center; }
@@ -139,11 +140,11 @@ section { padding: 24px 0; }
 .product-media:focus-visible { outline: 2px solid #131311; outline-offset: -2px; }
 .btn-add-cart svg { flex: 0 0 auto; }
 .btn-add-cart { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 10px 16px; border: 1.5px solid transparent; border-radius: 12px; font-size: 0.88rem; font-weight: 800; white-space: nowrap; cursor: pointer; transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.1s ease; }
-.btn-add-cart { flex: 1; background: #131311; border-color: #131311; color: #fff; }
-.btn-add-cart:hover { background: #fff; color: #131311; border-color: #131311; transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); }
+.btn-add-cart { flex: 1; background: #0041c2; border-color: #0041c2; color: #fff; }
+.btn-add-cart:hover:not(:disabled), .btn-add-cart:focus-visible:not(:disabled) { background: #fff; color: #0041c2; border-color: #0041c2; transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0, 65, 194, 0.12); }
 .btn-add-cart.added { color: #fff; box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35); }
 .btn-add-cart:active { transform: scale(0.97); }
-.btn-add-cart.added { background: var(--accent); border-color: var(--accent); }
+.btn-add-cart.added { background: #0041c2; border-color: #0041c2; }
 .no-results { padding: 48px 0; text-align: center; color: var(--muted); }
 .cta-btn.ghost-dark { background: #fff; color: #131311; border: 1.5px solid #131311; }
 .cta-btn.ghost-dark:hover { background: var(--grad); color: #fff; border-color: #131311; }
