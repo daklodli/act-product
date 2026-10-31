@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&family=Noto+Sans+Armenian:wght@400;500;600;700&family=Noto+Serif+Armenian:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=88">
+  <link rel="stylesheet" href="style.css?v=96">
   <style>
     body.nf {
       background: var(--bg, #faf8f1);
@@ -72,46 +72,6 @@
       font-size: .97rem;
       text-wrap: pretty;
     }
-    .nf-search {
-      margin: 28px auto 0;
-      max-width: 480px;
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      background: transparent;
-      border: none;
-      box-shadow: none;
-      padding: 0;
-    }
-    .nf-search input {
-      flex: 1;
-      border: none;
-      border-bottom: 2px solid #131311;
-      border-radius: 0;
-      background: transparent;
-      padding: 12px 4px;
-      font: inherit;
-      font-size: .95rem;
-      outline: none;
-      min-width: 0;
-      color: inherit;
-    }
-    .nf-search input::placeholder { color: var(--muted, #6b6b6b); opacity: .8; }
-    .nf-search input:focus-visible { outline: none; }
-    .nf-search button {
-      background: #131311;
-      color: #fff;
-      border: none;
-      border-radius: 999px;
-      padding: 11px 26px;
-      min-height: 44px;
-      font-weight: 800;
-      font-size: .88rem;
-      font-family: inherit;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    .nf-search button:hover { background: #000; }
     .nf-actions {
       display: flex;
       gap: 10px;
@@ -190,19 +150,20 @@
     }
     @media (max-width: 600px) {
       .nf-main { padding: 40px 0 56px; }
-      .nf-search { flex-direction: column; align-items: stretch; }
-      .nf-search button { width: 100%; }
       .nf-actions .cta-btn { flex: 1 1 100%; justify-content: center; }
     }
     @media (prefers-reduced-motion: reduce) {
       .nf-solo { animation: none; }
     }
+  .nf-pop { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 12px; }
+  .nf-pop > span { flex-basis: 100%; }
+  .nf-pop a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 5px 10px; border: 1px solid var(--border); border-radius: 10px; max-width: 100%; white-space: normal; line-height: 1.5; }
+  .nf-pop a + a::before { display: none; }
   .nf-back button { display: inline-flex; align-items: center; gap: 8px; }
 .ic { flex: none; display: block; }
 </style>
 </head>
 <body class="nf">
-  <a href="#nfMain" class="skip-link" data-nf="skip">Անցնել հիմնական բովանդակությանը</a>
 
   <header>
     <div class="headbar">
@@ -220,20 +181,15 @@
         <p class="nf-kicker" data-nf="kicker">Սխալ 404</p>
         <p class="nf-code" aria-label="404">404</p>
         <h1 data-nf="title">Էջը չի գտնվել</h1>
-        <p class="nf-lede" data-nf="lede">Նման էջ գոյություն չունի։ Ստուգեք հասցեն կամ օգտվեք որոնումից։</p>
+        <p class="nf-lede" data-nf="lede">Նման էջ գոյություն չունի։ Ստուգիր հասցեն կամ անցիր տեսականի։</p>
 
-        <form class="nf-search" id="nfSearchForm" role="search">
-          <input type="search" id="nfSearch" autocomplete="off" enterkeyhint="search" placeholder="Որոնել ապրանք… (օր.՝ պայուսակ)" aria-label="Որոնել կայքում">
-          <button type="submit" data-nf="searchBtn">Որոնել</button>
-        </form>
-
-        <div class="nf-actions">
+<div class="nf-actions">
           <a class="cta-btn" id="nfGoHome" href="index.html"><span data-nf="goHome">Գլխավոր էջ</span></a>
           <a class="cta-btn ghost-dark" id="nfGoCatalog" href="index.html#products"><span data-nf="goCatalog">Դիտել տեսականին</span></a>
         </div>
         <p class="nf-back"><button type="button" id="nfGoBack"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 14 4 9l5-5"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg> <span data-nf="goBack">Հետ գնալ</span></button></p>
 
-        <p class="nf-pop" id="nfChips"><span data-nf="popular">Հաճախ են փնտրում</span>
+        <p class="nf-pop" id="nfChips"><span data-nf="popular">Բաժիններ</span>
           <a data-cat="textile" href="index.html?cat=textile#products"><span data-nf="cTex">Տեքստիլ</span></a><a data-cat="art" href="index.html?cat=art#products"><span data-nf="cArt">Նկարչություն</span></a><a data-cat="accessory" href="index.html?cat=accessory#products"><span data-nf="cAcc">Աքսեսուարներ</span></a><a data-cat="ceramic" href="index.html?cat=ceramic#products"><span data-nf="cCer">Կավագործություն</span></a><a data-cat="cs" href="index.html?cat=cs#products"><span data-nf="cCS">Համակարգչային գիտություն</span></a><a data-cat="digitalart" href="index.html?cat=digitalart#products"><span data-nf="cDA">Դիջիթլ արվեստ</span></a><a data-cat="engineer" href="index.html?cat=engineer#products"><span data-nf="cEng">Ինժեներություն</span></a>
         </p>
 
@@ -285,10 +241,9 @@
         hy: {
           skip: 'Անցնել հիմնական բովանդակությանը', home: 'Գլխավոր',
           kicker: 'Սխալ 404', title: 'Էջը չի գտնվել',
-          lede: 'Նման էջ գոյություն չունի։ Ստուգեք հասցեն կամ օգտվեք որոնումից։',
+          lede: 'Նման էջ գոյություն չունի։ Ստուգիր հասցեն կամ անցիր տեսականի։',
           goHome: 'Գլխավոր էջ', goCatalog: 'Դիտել տեսականին', goBack: 'Հետ գնալ',
-          searchBtn: 'Որոնել', searchPh: 'Որոնել ապրանք… (օր.՝ պայուսակ)',
-          popular: 'Հաճախ են փնտրում', cTex: 'Տեքստիլ', cArt: 'Նկարչություն',
+          popular: 'Բաժիններ', cTex: 'Տեքստիլ', cArt: 'Նկարչություն',
           cAcc: 'Աքսեսուարներ', cCer: 'Կավագործություն', cCS: 'Համակարգչային գիտություն', cDA: 'Դիջիթլ արվեստ', cEng: 'Ինժեներություն',
           help: 'Օգնություն է պետք՞', footTag: 'Ձեռագործ արտադրանքի առցանց խանութ։',
           footPhone: 'Հեռախոս', footMail: 'Էլ. փոստ', docTitle: '404 — Էջը չի գտնվել | Act Product'
@@ -296,10 +251,9 @@
         en: {
           skip: 'Skip to main content', home: 'Home',
           kicker: 'Error 404', title: 'Page not found',
-          lede: 'This page doesn’t exist. Check the address or try searching.',
+          lede: 'This page does not exist. Check the address or browse the collection.',
           goHome: 'Homepage', goCatalog: 'View catalog', goBack: 'Go back',
-          searchBtn: 'Search', searchPh: 'Search products… (e.g. bag)',
-          popular: 'People often search:', cTex: 'Textile', cArt: 'Painting',
+          popular: 'Categories', cTex: 'Textile', cArt: 'Painting',
           cAcc: 'Accessories', cCer: 'Ceramics', cCS: 'Computer Science', cDA: 'Digital Art', cEng: 'Engineering',
           help: 'Need help?', footTag: 'Handmade products online store.',
           footPhone: 'Phone', footMail: 'Email', docTitle: '404 — Page not found | Act Product'
@@ -329,8 +283,6 @@
           var k = el.getAttribute('data-nf');
           if (d[k]) el.textContent = d[k];
         });
-        $('nfSearch').setAttribute('placeholder', d.searchPh);
-        $('nfSearch').setAttribute('aria-label', d.searchPh);
         $('nfLang').textContent = lang === 'hy' ? 'EN' : 'ՀԱ';
         $('nfLang').setAttribute('aria-label', lang === 'hy' ? 'Switch to English' : 'Փոխել հայերենի');
         document.querySelectorAll('a[href*="index.html"]').forEach(function (a) { var u = new URL(a.href); u.searchParams.set('lang', lang); a.href = u.href; });
@@ -374,13 +326,6 @@
       $('nfGoBack').addEventListener('click', function () {
         if (history.length > 1) history.back();
         else location.href = indexUrl('');
-      });
-
-      // Որոնում → index.html?q=...#products (script.js-ը կարդում է ?q-ն)
-      $('nfSearchForm').addEventListener('submit', function (e) {
-        e.preventDefault();
-        var q = $('nfSearch').value.trim();
-        location.href = indexUrl(q ? ('?q=' + encodeURIComponent(q) + '#products') : '#products');
       });
 
       $('nfYear').textContent = new Date().getFullYear();
