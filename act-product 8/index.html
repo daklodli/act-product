@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&family=Noto+Sans+Armenian:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=95">
+  <link rel="stylesheet" href="style.css?v=96">
 </head>
 
 <body>
@@ -20,6 +20,12 @@
   <header>
     <div class="headbar">
       <a href="#products" class="logo">Act Product</a>
+
+
+      <nav class="store-nav" aria-label="Գլխավոր բաժիններ" data-i18n-aria="navLabel">
+        <a href="#products" data-i18n="catalogLabel">Տեսականի</a>
+        <a href="#custom" data-i18n="navCustom">Պատվերով</a>
+      </nav>
 
       <div class="header-actions">
         <button class="lang-toggle" id="langToggle" type="button">EN</button>
@@ -37,27 +43,10 @@
   </header>
 
   <main id="mainContent">
-    <section class="hero-banner" id="home">
+    <h1 class="sr-only">Act Product</h1>
+    <section class="hero-banner" id="home" aria-label="Արտադրանքի պատրաստման տեսանյութ" data-i18n-aria="heroVideoTitle">
       <div class="hero-video" aria-hidden="true" inert>
         <iframe src="https://www.youtube.com/embed/ZvUwpsG7_FE?autoplay=1&amp;mute=1&amp;controls=0&amp;disablekb=1&amp;fs=0&amp;loop=1&amp;playlist=ZvUwpsG7_FE&amp;playsinline=1&amp;rel=0" title="Արտադրանքի պատրաստման տեսանյութ" data-i18n-title="heroVideoTitle" allow="autoplay; encrypted-media" tabindex="-1" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-      </div>
-      <div class="hero-shade"></div>
-
-      <div class="wrap hero-content">
-        <h1 data-i18n="heroTitle">Ստեղծված քեզ համար</h1>
-
-        <p class="lede" data-i18n="heroLede">Ընտրիր տեսականուց կամ պատվիրիր քո տարբերակը։</p>
-
-        <div class="hero-actions">
-          <a href="#custom" class="cta-btn hero-custom" data-i18n="customNav">Պատվերով պատրաստում</a>
-          <a href="#products" class="cta-btn" data-i18n="heroBtn1">Դիտել տեսականին</a>
-        </div>
-
-        <div class="hero-stats">
-          <div><strong id="productStat">75</strong><span data-i18n="statProducts">ապրանք</span></div>
-          <div><strong>7</strong><span data-i18n="statCats">կատեգորիա</span></div>
-          <div><strong>100%</strong><span data-i18n="statHand">ձեռագործ</span></div>
-        </div>
       </div>
     </section>
 
@@ -308,9 +297,9 @@
   <div class="done-modal" id="doneModal" role="alertdialog" aria-modal="true" aria-hidden="true" aria-labelledby="doneTitle">
     <div class="done-box">
       <svg class="success-mark" viewBox="0 0 52 52" fill="none" aria-hidden="true"><circle class="success-ring" cx="26" cy="26" r="23" pathLength="1"/><path class="success-tick" d="m15 26 7 7 15-15" pathLength="1"/></svg>
-      <p class="done-title" id="doneTitle" data-i18n="doneTitle">Պատվերը ընդունված է։</p>
+      <p class="done-title" id="doneTitle" data-i18n="doneTitle">Տվյալները պահպանված են</p>
       <p class="done-sub" data-i18n="doneSub">
-        Շնորհակալություն պատվերի համար։ Մեր աշխատակիցը կկապվի Ձեզ հետ։
+        Պատվերի տվյալները պահպանված են այս բրաուզերում։ Հաստատման համար կապվիր խանութի հետ։
       </p>
       <button class="cta-btn" id="doneClose" type="button" data-i18n="doneOk">Լավ</button>
     </div>
@@ -441,10 +430,10 @@
       <button id="analyticsAllow" type="button" data-i18n="analyticsAllow">Թույլատրել</button>
     </div>
   </section>
-  <script defer src="lang.js?v=91"></script>
+  <script defer src="lang.js?v=96"></script>
   <script defer src="catalog-products.js?v=84"></script>
   <script defer src="photo-products.js?v=74"></script>
-  <script defer src="script.js?v=92"></script>
+  <script defer src="script.js?v=96"></script>
   <script defer src="analytics.js?v=79"></script>
 </body>
 </html>
