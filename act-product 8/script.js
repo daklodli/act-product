@@ -160,6 +160,31 @@
   var coComment = $('#coComment');
   var activeFilter = 'all';
   var activeSort = 'default';
+  var quickViewReturnFocus = null, checkoutReturnFocus = null, doneReturnFocus = null;
+  cartSidebar.inert = true;
+
+  function activeDialog() {
+    var ids = ['doneModal','coModal','ordModal','qvModal','cartSidebar'];
+    for (var i = 0; i < ids.length; i++) {
+      var dialog = document.getElementById(ids[i]);
+      if (dialog && dialog.classList.contains('open')) return dialog;
+    }
+    return null;
+  }
+  document.addEventListener('keydown', function (event) {
+    if (event.key !== 'Tab') return;
+    var dialog = activeDialog(); if (!dialog) return;
+    var share = document.getElementById('sharePanel');
+    var scope = share && !share.hidden && dialog.contains(share) ? share : dialog;
+    var controls = Array.from(scope.querySelectorAll('button, a[href], input, select, textarea, [tabindex]')).filter(function (control) {
+      return !control.disabled && control.tabIndex >= 0 && control.getClientRects().length && !control.closest('[inert]') && getComputedStyle(control).visibility !== 'hidden';
+    });
+    if (!controls.length) { event.preventDefault(); return; }
+    var first = controls[0], last = controls[controls.length - 1], focused = document.activeElement;
+    if (!scope.contains(focused) || (event.shiftKey && focused === first) || (!event.shiftKey && focused === last)) {
+      event.preventDefault(); (event.shiftKey ? last : first).focus();
+    }
+  });
 
   /* ---------- 2. Toast ---------- */
   function showToast(message, success) {
@@ -199,13 +224,14 @@
   }
 
   function openCart() {
+    cartSidebar.inert = false;
     cartSidebar.classList.add('open');
     cartOverlay.classList.add('open');
     cartSidebar.setAttribute('aria-hidden', 'false');
     cartOverlay.setAttribute('aria-hidden', 'false');
     cartToggle.setAttribute('aria-expanded', 'true');
     document.body.style.overflow = 'hidden';
-    cartClose.focus();
+    window.requestAnimationFrame(function () { if (cartSidebar.classList.contains('open')) cartClose.focus({preventScroll:true}); });
   }
 
   function closeCart(restoreFocus) {
@@ -214,6 +240,7 @@
     cartSidebar.setAttribute('aria-hidden', 'true');
     cartOverlay.setAttribute('aria-hidden', 'true');
     cartToggle.setAttribute('aria-expanded', 'false');
+    cartSidebar.inert = true;
     document.body.style.overflow = '';
     if (restoreFocus !== false) cartToggle.focus();
   }
@@ -655,6 +682,9 @@
   document.addEventListener('click', function (event) {
     if (categoryPicker.open && !categoryPicker.contains(event.target)) categoryPicker.open = false;
   });
+  categoryPicker.addEventListener('toggle', function () {
+    if (categoryPicker.open && categoryPicker.querySelector('.category-panel').getBoundingClientRect().bottom > window.innerHeight - 12) categoryPicker.scrollIntoView({block:'start'});
+  });
   categoryPicker.addEventListener('keydown', function (event) {
     if (event.key === 'Escape' && categoryPicker.open) {
       event.preventDefault(); categoryPicker.open = false;
@@ -692,6 +722,10 @@
     updateFavBtn();
   }
   function refreshCatTitle() {
+    filterButtons.forEach(function (button) {
+      var active = button.dataset.filter === activeFilter;
+      button.classList.toggle('active', active); button.setAttribute('aria-pressed', String(active));
+    });
     var el = $('#categoryPickerLabel');
     var stat = $('#productStat'); if (stat) stat.textContent = catalogProducts().length;
     if (el) el.textContent = t(activeFilter === 'all' ? 'catalogChoose' : FILTER_TITLE[activeFilter] || 'catalogChoose');
@@ -794,6 +828,7 @@
   var doneTimer = null;
 
   function showDone() {
+    doneReturnFocus = document.activeElement;
     doneModal.classList.add('open');
     doneOverlay.classList.add('open');
     doneModal.setAttribute('aria-hidden', 'false');
@@ -811,6 +846,9 @@
     doneOverlay.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
     window.clearTimeout(doneTimer);
+    var target = doneReturnFocus;
+    if (!target || !target.isConnected || !target.getClientRects().length || target.closest('[inert]') || getComputedStyle(target).visibility === 'hidden') target = cartToggle;
+    target.focus({preventScroll:true});
   }
 
   doneClose.addEventListener('click', closeDone);
@@ -839,6 +877,7 @@
 
   function openCheckout() {
     if (!coModal || !cart.length) return;
+    checkoutReturnFocus = document.activeElement;
     renderCheckoutSummary();
     closeCart(false);
     coModal.classList.add('open');
@@ -856,6 +895,9 @@
     coModal.setAttribute('aria-hidden', 'true');
     coOverlay.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+    var target = checkoutReturnFocus;
+    if (!target || !target.isConnected || !target.getClientRects().length || target.closest('[inert]') || getComputedStyle(target).visibility === 'hidden') target = cartToggle;
+    target.focus({preventScroll:true});
   }
 
   if (coClose) coClose.addEventListener('click', closeCheckout);
@@ -961,6 +1003,7 @@
     if (ov) ov.classList.remove('open');
     md.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+    if (ordersToggle) ordersToggle.focus({preventScroll:true});
   }
   var ordersToggle = $('#ordersToggle');
   if (ordersToggle) ordersToggle.addEventListener('click', openOrders);
@@ -1022,9 +1065,15 @@
         if (e.target.tagName === 'VIDEO') return;
         if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); showGallery(galleryIndex + (e.key === 'ArrowRight' ? 1 : -1)); }
       });
-      var startX = null;
-      qvImg.addEventListener('touchstart', function (e) { startX = e.changedTouches[0].clientX; }, {passive:true});
-      qvImg.addEventListener('touchend', function (e) { var delta = e.changedTouches[0].clientX - startX; if (startX !== null && Math.abs(delta) > 45) showGallery(galleryIndex + (delta < 0 ? 1 : -1)); startX = null; }, {passive:true});
+      var swipeStart = null;
+      qvImg.addEventListener('touchstart', function (e) { var touch = e.changedTouches[0]; swipeStart = {x:touch.clientX,y:touch.clientY}; }, {passive:true});
+      qvImg.addEventListener('touchend', function (e) {
+        if (!swipeStart) return;
+        var touch = e.changedTouches[0], dx = touch.clientX - swipeStart.x, dy = touch.clientY - swipeStart.y;
+        if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.2) showGallery(galleryIndex + (dx < 0 ? 1 : -1));
+        swipeStart = null;
+      }, {passive:true});
+      qvImg.addEventListener('touchcancel', function () { swipeStart = null; }, {passive:true});
     }
     if ($('#galleryPrev')) {
       $('#galleryPrev').setAttribute('aria-label', t('galleryPrev'));
@@ -1055,6 +1104,8 @@
   }
 
   function openQuickView(card, updateHistory) {
+    var wasOpen = qvModal.classList.contains('open');
+    if (!wasOpen) quickViewReturnFocus = document.activeElement;
     if (sharePanel) closeSharePanel(false);
     if (!card || !card.querySelector) return;
     var img = card.querySelector('.product-art');
@@ -1104,7 +1155,10 @@
     qvOverlay.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
     if (updateHistory !== false) syncProductUrl(product, true);
-    qvClose.focus();
+    if (!wasOpen) {
+      var focusQuickView = function () { if (qvModal.classList.contains('open') && !qvModal.contains(document.activeElement)) qvClose.focus({preventScroll:true}); };
+      window.requestAnimationFrame(focusQuickView); window.setTimeout(focusQuickView, 240);
+    }
   }
 
   function renderQvColors(product) {
@@ -1152,7 +1206,7 @@
     qvModal.setAttribute('aria-hidden', 'true');
     qvOverlay.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
-    if (restoreFocus !== false && document.activeElement) document.activeElement.blur();
+    if (restoreFocus !== false && quickViewReturnFocus && quickViewReturnFocus.isConnected) quickViewReturnFocus.focus({preventScroll:true});
   }
 
   qvAdd.addEventListener('click', function () {
@@ -1631,12 +1685,12 @@
     });
   }
 
-  qvClose.addEventListener('click', function () { closeQuickView(false); });
-  qvOverlay.addEventListener('click', function () { closeQuickView(false); });
+  qvClose.addEventListener('click', function () { closeQuickView(true); });
+  qvOverlay.addEventListener('click', function () { closeQuickView(true); });
   var qvDownOnBackdrop = false;
   qvModal.addEventListener('pointerdown', function (e) { qvDownOnBackdrop = (e.target === qvModal); });
   qvModal.addEventListener('click', function (e) {
-    if (e.target === qvModal && qvDownOnBackdrop) closeQuickView(false);
+    if (e.target === qvModal && qvDownOnBackdrop) closeQuickView(true);
   });
 
   /* ---------- 6c. Promo code ---------- */
@@ -1720,6 +1774,10 @@
   });
 
   var siteHeader = $('header');
+  function syncHeaderHeight() { document.documentElement.style.setProperty('--header-height', siteHeader.offsetHeight + 'px'); }
+  syncHeaderHeight();
+  if (window.ResizeObserver) new ResizeObserver(syncHeaderHeight).observe(siteHeader);
+  else window.addEventListener('resize', syncHeaderHeight);
 
   window.addEventListener('scroll', function () {
     backToTop.hidden = window.scrollY < 500;
