@@ -625,13 +625,13 @@
       '<p class="price">' + formatPrice(p.price) + (p.old && p.old > p.price ? '<s class="old-price">' + formatPrice(p.old) + '</s>' : '') + '</p>' +
       '<div class="product-actions"><button class="btn-add-cart" type="button" aria-label="' + t('add') + ': ' + safeName + '">' +
       '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>' +
-      '<span>' + t('add') + '</span></button>' +
+      '<span>' + t('cardAdd') + '</span></button>' +
       '<button class="btn-mark' + (isSelected(p.hy.name) ? ' picked' : '') + '" type="button">' + markHTML(isSelected(p.hy.name)) + '</button></div></div>';
     var btn = card.querySelector('.btn-add-cart');
     btn.dataset.name = p.hy.name;
     btn.dataset.price = p.price == null ? '' : p.price;
     if (p.price == null) {
-      btn.disabled = true; btn.querySelector('span').textContent = t('pricePending');
+      btn.disabled = true; btn.querySelector('span').textContent = t('cardPricePending');
       var mark = card.querySelector('.btn-mark'); mark.disabled = true;
     }
     btn.dataset.category = p.cat;
