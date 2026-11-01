@@ -6,6 +6,43 @@
   <meta name="description" content="Act Product՝ ձեռագործ արտադրանքի առցանց խանութ։">
   <meta name="theme-color" content="#131311">
   <title>Act Product — Ձեռագործ արտադրանք</title>
+  <script id="actRefresh">
+(function () {
+  'use strict';
+  var root = document.documentElement;
+  root.dataset.actRefresh = 'ready';
+  try {
+    var url = new URL(location.href);
+    var marker = '__act_refresh';
+    var refreshed = url.searchParams.has(marker);
+    var cleanAddress = refreshed || url.searchParams.has('verify');
+    url.searchParams.delete(marker);
+    url.searchParams.delete('verify');
+
+    // The fresh request returns to the same address without another reload.
+    if (refreshed) {
+      history.replaceState(history.state, '', url.href);
+      root.dataset.actRefresh = 'fresh';
+      return;
+    }
+
+    var entries = window.performance && window.performance.getEntriesByType
+      ? window.performance.getEntriesByType('navigation') : [];
+    if (entries[0] && entries[0].type === 'reload' && /^https?:$/.test(url.protocol)) {
+      // GitHub Pages owns HTTP cache headers. A one-use query bypasses a cached
+      // HTML document, while this tab, its history entry and section stay intact.
+      url.searchParams.set(marker, Date.now().toString(36));
+      root.dataset.actRefresh = 'loading';
+      location.replace(url.href);
+      return;
+    }
+    if (cleanAddress) history.replaceState(history.state, '', url.href);
+  } catch (error) {
+    // Restricted/file previews retain the browser's normal refresh behavior.
+  }
+})();
+  </script>
+
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
