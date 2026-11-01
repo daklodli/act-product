@@ -1764,14 +1764,7 @@
   });
 
   /* ---------- 7. Anchors & back-to-top ---------- */
-  $$('a[href^="#"]').forEach(function (link) {
-    link.addEventListener('click', function (event) {
-      var target = $(link.getAttribute('href'));
-      if (!target) return;
-      event.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth' });
-    });
-  });
+  // Native fragment links preserve the section in the URL and browser history.
 
   var siteHeader = $('header');
   function syncHeaderHeight() { document.documentElement.style.setProperty('--header-height', siteHeader.offsetHeight + 'px'); }
