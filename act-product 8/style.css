@@ -509,6 +509,18 @@ body.cat-filtered .hero-banner { display: none; }
 .finder-change { flex: none; padding: 8px 10px; border: 0; border-radius: 8px; font: inherit; font-size: .74rem; font-weight: 600; cursor: pointer; }
 .custom-product-row input[type="number"] { flex: 1; min-height: 76px; }
 .custom-product-row .custom-product-prompt, .custom-product-row .finder-selection { flex: 1; }
+/* Share label, control and validation rows so either label can wrap without
+   making the two controls different heights. */
+@supports (grid-template-rows: subgrid) {
+  .custom-product-row { grid-template-rows: auto minmax(76px, 1fr) auto; grid-auto-rows: auto; row-gap: 5px; }
+  .custom-product-row > .field { display: grid; grid-template-rows: subgrid; grid-row: span 3; }
+  .custom-product-row > .field > .co-label, .custom-product-row > .field > label { grid-row: 1; }
+  .custom-product-row .custom-product-prompt, .custom-product-row .finder-selection, .custom-product-row input[type="number"] { grid-row: 2; align-self: stretch; }
+  .custom-product-row .field-error { grid-row: 3; }
+  @media (max-width: 700px) {
+    .custom-product-row { grid-template-rows: auto minmax(76px, 1fr) auto auto minmax(76px, 1fr) auto; }
+  }
+}
 @media (max-width: 500px) {
   .finder-selection { gap: 9px; padding: 10px; }
   .finder-selection-image { width: 40px; height: 44px; }
