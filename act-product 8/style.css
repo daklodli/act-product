@@ -616,8 +616,8 @@ body.cat-filtered .hero-banner { display: none; }
 .store-nav a:focus-visible { outline-color: #fff; }
 .headbar .header-actions { margin-left: 0; }
 .hero-banner { background: #131311; }
-.product-card .btn-add-cart, .product-card .btn-mark { white-space: normal; line-height: 1.35; }
-.product-card .btn-add-cart span, .product-card .btn-mark span { min-width: 0; overflow-wrap: break-word; }
+.product-card .btn-add-cart, .product-card .btn-mark { height: 44px; flex: 0 0 auto; white-space: nowrap; font-size: .8rem; line-height: 1.25; }
+.product-card .btn-add-cart span, .product-card .btn-mark span { min-width: 0; overflow-wrap: normal; }
 .fav-btn { width: 40px; height: 40px; }
 .qv-close, .cart-close, .qv-share, .share-close { min-width: 44px; min-height: 44px; }
 .qv-topbar, .qv-footer { flex-shrink: 0; }
