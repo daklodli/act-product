@@ -698,3 +698,10 @@ body.cat-filtered .hero-banner { display: none; }
   .product-card .btn-add-cart .ic { width: 15px; }
   .custom-layout { padding: 14px; }
 }
+
+/* Account entry beside the shop controls. */
+.account-toggle{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:0 13px;border:1px solid #ffffff80;border-radius:12px;background:#ffffff26;color:#fff;font-size:.82rem;font-weight:600;text-decoration:none;white-space:nowrap;transition:background .18s,color .18s}
+.account-toggle:hover,.account-toggle:focus-visible{background:#fff;color:#131311}
+.account-toggle:focus-visible{outline:2px solid #fff;outline-offset:3px}
+@media(max-width:700px){.account-toggle{width:44px;padding:0}.account-toggle span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}.headbar .header-actions{gap:7px}.headbar>.logo{font-size:clamp(.85rem,3.7vw,1.15rem)}}
+@media(max-width:380px){.account-toggle{width:40px}.headbar .header-actions{gap:5px}}
