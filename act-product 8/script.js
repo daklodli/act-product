@@ -130,7 +130,6 @@
   var cartTotal = $('#cartTotal');
   var cartCheckout = $('#cartCheckout');
   var categoryPicker = $('#categoryPicker');
-  var productCards = $$('.product-card');
   var filterButtons = $$('.filter-btn');
   var noResults = $('#noResults');
   var resultsCount = $('#resultsCount');
@@ -448,7 +447,7 @@
               });
               refreshCatTitle();
             }
-            filterProducts();
+            filterProducts(activeFilter === 'all');
           }
           updateSelBar();
         }
@@ -474,7 +473,7 @@
         return;
       }
       var card = event.target.closest('.product-card');
-      if (card) openQuickView(card);
+      if (card) openQuickView(PRODUCTS[Number(card.dataset.index)]);
     });
     productsGrid.addEventListener('keydown', function (event) {
       if (event.key !== 'Enter' && event.key !== ' ') return;
@@ -482,7 +481,7 @@
       if (media && event.target === media) {
         event.preventDefault();
         var card = media.closest('.product-card');
-        if (card) openQuickView(card);
+        if (card) openQuickView(PRODUCTS[Number(card.dataset.index)]);
       }
     });
   }
@@ -544,13 +543,17 @@
     button.appendChild(dot); var label = document.createElement('span'); label.className = 'sr-only'; label.textContent = product.color[lang]; button.appendChild(label);
     return button;
   }
-  function cardForProduct(product) {
-    return cardsByKey[product.colorGroup || product.id];
-  }
-  function chooseCardColor(card, product) {
-    if (product.colorGroup) colorChoices[product.colorGroup] = product.id;
-    var replacement = buildCard(product, productIndexById[product.id]); replacement.hidden = card.hidden;
-    card.replaceWith(replacement); productCards[productCards.indexOf(card)] = replacement; return replacement;
+  function chooseProductColor(product) {
+    if (!product.colorGroup) return;
+    var key = product.colorGroup;
+    colorChoices[key] = product.id;
+    var card = cardsByKey[key];
+    var index = productIndexById[product.id];
+    if (card && Number(card.dataset.index) !== index) {
+      var replacement = buildCard(product, index);
+      card.replaceWith(replacement);
+      cardsByKey[key] = replacement;
+    }
   }
   function displayName(name, id) { var p = id ? productById[id] : productByName[name]; return p ? p[lang].name : name; }
 
@@ -607,7 +610,7 @@
         item.setAttribute('aria-pressed', String(isActive));
       });
       refreshCatTitle();
-      filterProducts();
+      filterProducts(true);
     }
     updateSelBar();
   }
@@ -620,8 +623,7 @@
       item.setAttribute('aria-pressed', 'false');
     });
     refreshCatTitle();
-    applySort();
-    filterProducts();
+    filterProducts(true);
     var sec = $('#products');
     if (sec && sec.scrollIntoView) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
@@ -658,48 +660,80 @@
       var mark = card.querySelector('.btn-mark'); mark.disabled = true;
     }
     btn.dataset.category = p.cat;
-    cardsByKey[p.colorGroup || p.id] = card;
     return card;
   }
 
-  function renderProducts() {
-    if (!productsGrid) return;
-    var frag = document.createDocumentFragment();
-    cardsByKey = Object.create(null);
-    catalogProducts().forEach(function (base) {
-      var p = base.colorGroup ? productById[colorChoices[base.colorGroup]] || base : base;
-      frag.appendChild(buildCard(p, productIndexById[p.id]));
-    });
-    productsGrid.innerHTML = '';
-    productsGrid.appendChild(frag);
-    productCards = $$('.product-card');
+  /* ---------- Catalog categories, sorting and batches ---------- */
+  var CATALOG_BATCH = 10;
+  var catalogMore = $('#catalogMore');
+  var catalogLimit = CATALOG_BATCH;
+  var catalogMatches = [];
+  var catalogRendered = 0;
+
+  function catalogChoice(base) {
+    return productById[colorChoices[base.colorGroup]] || base;
   }
 
-  /* ---------- Catalog categories and sorting ---------- */
-  function matchedCards() {
-    return productCards.filter(function (card) {
-      var product = PRODUCTS[Number(card.dataset.index)];
-      if (activeFilter === 'fav') return colorVariants(product).some(function (v) { return isFav(v.hy.name); });
-      if (activeFilter === 'sel') return colorVariants(product).some(function (v) { return isSelected(v.hy.name); });
-      return activeFilter === 'all' || card.dataset.category === activeFilter;
-    });
-  }
-
-  function filterProducts() {
-    if (activeFilter === 'fav' || activeFilter === 'sel') {
-      productCards.slice().forEach(function (card) {
-        var product = PRODUCTS[Number(card.dataset.index)]; if (!product.colorGroup) return;
-        var eligible = colorVariants(product).filter(function (v) {
-          return activeFilter === 'fav' ? isFav(v.hy.name) : isSelected(v.hy.name);
-        });
-        if (eligible.length && !eligible.some(function (v) { return v.id === product.id; })) chooseCardColor(card, eligible[0]);
-      });
+  function appendCatalogCards() {
+    var batch = document.createDocumentFragment();
+    var end = Math.min(catalogLimit, catalogMatches.length);
+    for (; catalogRendered < end; catalogRendered++) {
+      var product = catalogChoice(catalogMatches[catalogRendered]);
+      var card = buildCard(product, productIndexById[product.id]);
+      cardsByKey[product.colorGroup || product.id] = card;
+      batch.appendChild(card);
     }
-    var matched = matchedCards();
-    productCards.forEach(function (card) { card.hidden = true; });
-    matched.forEach(function (card) { card.hidden = false; });
-    noResults.hidden = matched.length !== 0;
-    resultsCount.textContent = matched.length ? t(activeFilter === 'all' ? 'resultsAll' : 'resultsFound', { n: matched.length }) : '';
+    productsGrid.appendChild(batch);
+    catalogMore.hidden = catalogRendered >= catalogMatches.length;
+  }
+
+  function loadMoreProducts(event) {
+    if (catalogMore.hidden) return;
+    var firstNewCard = catalogRendered;
+    catalogLimit += CATALOG_BATCH;
+    appendCatalogCards();
+    if (event) productsGrid.children[firstNewCard].querySelector('.product-media').focus({preventScroll:true});
+  }
+
+  catalogMore.addEventListener('click', loadMoreProducts);
+  if (window.IntersectionObserver) {
+    var catalogObserver = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) loadMoreProducts();
+    });
+    catalogObserver.observe(catalogMore);
+  }
+
+  function filterProducts(resetLimit) {
+    if (resetLimit) catalogLimit = CATALOG_BATCH;
+    var selectedProduct = activeFilter === 'fav' ? isFav : activeFilter === 'sel' ? isSelected : null;
+    catalogMatches = catalogProducts().flatMap(function (base) {
+      var product = catalogChoice(base);
+      if (selectedProduct) {
+        if (!selectedProduct(product.hy.name)) {
+          product = colorVariants(base).find(function (variant) { return selectedProduct(variant.hy.name); });
+        }
+        if (!product) return [];
+        if (product.colorGroup) colorChoices[product.colorGroup] = product.id;
+      } else if (activeFilter !== 'all' && activeFilter !== product.cat) return [];
+      return [product];
+    });
+    if (activeSort === 'asc' || activeSort === 'desc') {
+      var direction = activeSort === 'asc' ? 1 : -1;
+      catalogMatches.sort(function (a, b) {
+        if (a.price == null) return b.price == null ? 0 : 1;
+        if (b.price == null) return -1;
+        return direction * (a.price - b.price);
+      });
+    } else {
+      catalogMatches.sort(function (a, b) { return productIndexById[a.id] - productIndexById[b.id]; });
+    }
+    productsGrid.replaceChildren();
+    cardsByKey = Object.create(null);
+    catalogRendered = 0;
+    appendCatalogCards();
+    var count = catalogMatches.length;
+    noResults.hidden = count > 0;
+    resultsCount.textContent = count ? t(activeFilter === 'all' ? 'resultsAll' : 'resultsFound', { n: count }) : '';
   }
 
   document.addEventListener('click', function (event) {
@@ -725,8 +759,7 @@
         item.classList.toggle('active', isActive);
         item.setAttribute('aria-pressed', String(isActive));
       });
-      applySort();
-      filterProducts();
+      filterProducts(true);
       refreshCatTitle();
       var sec = $('#products');
       if (sec && sec.scrollIntoView) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -756,28 +789,9 @@
     document.body.classList.toggle('cat-filtered', activeFilter !== 'all');
   }
 
-  function cardPrice(card) {
-    return card.dataset.pending === 'true' ? null : Number(card.querySelector('.btn-add-cart').dataset.price);
-  }
-
-  function applySort() {
-    var grid = $('#productsGrid');
-    if (!grid) return;
-    var sorted = productCards.slice();
-    if (activeSort === 'asc') {
-      sorted.sort(function (a, b) { var x = cardPrice(a), y = cardPrice(b); return x === null ? (y === null ? 0 : 1) : y === null ? -1 : x - y; });
-    } else if (activeSort === 'desc') {
-      sorted.sort(function (a, b) { var x = cardPrice(a), y = cardPrice(b); return x === null ? (y === null ? 0 : 1) : y === null ? -1 : y - x; });
-    } else {
-      sorted.sort(function (a, b) { return a.dataset.index - b.dataset.index; });
-    }
-    sorted.forEach(function (card) { grid.appendChild(card); });
-  }
-
   sortSelect.addEventListener('change', function () {
     activeSort = sortSelect.value;
-    applySort();
-    filterProducts();
+    filterProducts(true);
   });
 
   /* ---------- 6. Contact form ---------- */
@@ -1129,23 +1143,18 @@
     Array.from($('#galleryThumbs') ? $('#galleryThumbs').children : []).forEach(function (btn, i) { btn.setAttribute('aria-pressed', String(i === galleryIndex)); });
   }
 
-  function openQuickView(card, updateHistory) {
+  function openQuickView(product, updateHistory) {
+    if (!product) return;
     var wasOpen = qvModal.classList.contains('open');
     if (!wasOpen) quickViewReturnFocus = document.activeElement;
     if (sharePanel) closeSharePanel(false);
-    if (!card || !card.querySelector) return;
-    var img = card.querySelector('.product-art');
-    var addBtn = card.querySelector('.btn-add-cart');
-    if (!img || !addBtn || !qvModal) return;
-    var product = PRODUCTS[Number(card.dataset.index)];
     if (window.ACTAnalytics) window.ACTAnalytics.viewProduct(product);
     var detail = lang === 'en' ? product.en : product.hy;
     var pending = product.price == null;
-    var cat = card.dataset.category || 'textile';
+    var cat = product.cat || 'textile';
     if (qvMedia) qvMedia.dataset.category = cat;
-    openGallery(product, img.alt);
-    var badgeEl = card.querySelector('.product-badge');
-    if (qvBadge) qvBadge.textContent = badgeEl ? badgeEl.textContent : '';
+    openGallery(product, detail.name);
+    if (qvBadge) qvBadge.textContent = t(product.badge);
     if (qvType) qvType.textContent = detail.type;
     if (qvName) qvName.textContent = product.groupName ? product.groupName[lang] : detail.name;
     if (qvPrice) qvPrice.textContent = formatPrice(product.price,product.currency);
@@ -1165,17 +1174,19 @@
     if (qvEta) {
       qvEta.textContent = t('detailsPending');
     }
-    qvAdd.dataset.name = addBtn.dataset.name;qvAdd.dataset.productId=product.id;qvAdd.dataset.currency=product.currency||'AMD';
-    qvAdd.dataset.price = addBtn.dataset.price;
-    qvAdd.dataset.category = addBtn.dataset.category;
-    qvAdd.dataset.index = card.dataset.index || '';
+    qvAdd.dataset.name = product.hy.name;
+    qvAdd.dataset.productId = product.id;
+    qvAdd.dataset.currency = product.currency || 'AMD';
+    qvAdd.dataset.price = pending ? '' : product.price;
+    qvAdd.dataset.category = cat;
+    qvAdd.dataset.index = productIndexById[product.id];
     qvAdd.classList.remove('added');
     qvAdd.disabled = pending;
     qvAdd.textContent = t(pending ? 'pricePending' : 'add');
     var buyNow = $('#qvBuy'); if (buyNow) buyNow.hidden = pending;
     renderQvColors(product);
     refreshQvRating();
-    renderSimilar(cat, addBtn.dataset.name);
+    renderSimilar(cat, product.hy.name);
     renderQvReviews();
     qvModal.classList.add('open');
     qvOverlay.classList.add('open');
@@ -1202,7 +1213,8 @@
     var button = event.target.closest('[data-color-product]'); if (!button) return;
     var product = productById[button.dataset.colorProduct];
     colorRequestModes[product.id] = false;
-    var card = chooseCardColor(cardForProduct(product), product); openQuickView(card);
+    chooseProductColor(product);
+    openQuickView(product);
     $('#qvColorList [data-color-product="' + product.id + '"]').focus({preventScroll:true});
   });
   function setColorRequestMode(open) {
@@ -1669,8 +1681,8 @@
     var legacy = /^#p-(\d+)$/.exec(location.hash || '');
     var product = id ? productById[id] : legacy ? PRODUCTS[Number(legacy[1])] : null;
     if (product) {
-      var card = cardForProduct(product);
-      if (card) { if (PRODUCTS[Number(card.dataset.index)].id !== product.id) card = chooseCardColor(card,product); openQuickView(card, false); }
+      chooseProductColor(product);
+      openQuickView(product, false);
     } else if (qvModal.classList.contains('open')) closeQuickView(true, false);
   }
   window.addEventListener('popstate', function () {
@@ -1701,13 +1713,10 @@
       b.className = 'qv-sim';
       b.innerHTML = '<img src="' + (it.p.thumb || it.p.img) + '" alt="" loading="lazy"><strong>' + escapeHTML(d.name) + '</strong><span>' + formatPrice(it.p.price,it.p.currency) + '</span>';
       b.addEventListener('click', function () {
-        var target = cardForProduct(it.p);
-        if (target && PRODUCTS[Number(target.dataset.index)].id !== it.p.id) target = chooseCardColor(target,it.p);
-        if (target) {
-          openQuickView(target);
-          var sc = document.querySelector('.qv-scroll');
-          if (sc) sc.scrollTop = 0;
-        }
+        chooseProductColor(it.p);
+        openQuickView(it.p);
+        var sc = document.querySelector('.qv-scroll');
+        if (sc) sc.scrollTop = 0;
       });
       grid.appendChild(b);
     });
@@ -1762,7 +1771,7 @@
 
   /* ---------- 6e. Language (HY/EN) ---------- */
   function applyLang(refreshProduct) {
-    var activeIndex = refreshProduct !== false && qvModal.classList.contains('open') ? qvAdd.dataset.index : null;
+    var activeProduct = refreshProduct !== false && qvModal.classList.contains('open') ? currentProduct() : null;
     var scroll = $('.qv-scroll'); var scrollTop = scroll ? scroll.scrollTop : 0;
     document.documentElement.lang = lang;
     document.title = t('docTitle');
@@ -1772,7 +1781,6 @@
       $$('[data-i18n-' + kind + ']').forEach(function (el) { el.setAttribute(attr, t(el.getAttribute('data-i18n-' + kind))); });
     });
     var meta = $('meta[name="description"]'); if (meta) meta.content = t('metaDescription');
-    renderProducts(); applySort();
     langToggle.textContent = lang === 'hy' ? 'EN' : 'ՀԱ';
     langToggle.setAttribute('aria-label', t(lang === 'hy' ? 'langToEn' : 'langToHy'));
     $$('#qvRevStars button').forEach(function (b) { b.setAttribute('aria-label', t('rateStars', {n:b.dataset.star})); });
@@ -1781,8 +1789,8 @@
     refreshCatTitle(); updateFilterCounts(); updateSelBar(); renderCart(); renderOrders(); renderCustomProducts(); filterProducts();
     renderCatalogNotice();
     if (coModal.classList.contains('open')) renderCheckoutSummary();
-    if (activeIndex !== null) {
-      openQuickView(productCards.find(function (c) { return c.dataset.index === activeIndex; }), false);
+    if (activeProduct) {
+      openQuickView(activeProduct, false);
       if (scroll) scroll.scrollTop = scrollTop;
     }
   }
@@ -1812,22 +1820,9 @@
 
   /* ---------- 7c. URL params (?q=, ?cat=) — 404.html-ը հղում է այսպես ---------- */
   function applyUrlParams() {
-    var query = new URLSearchParams(location.search);
-    var params = {cat:query.get('cat')};
+    var category = new URLSearchParams(location.search).get('cat');
     var validCats = ['all', 'textile', 'art', 'accessory', 'ceramic', 'cs', 'digitalart', 'engineer', 'other', 'fav', 'sel'];
-    if (params.cat && validCats.indexOf(params.cat) !== -1 && params.cat !== 'all') {
-      activeFilter = params.cat;
-      filterButtons.forEach(function (item) {
-        var isActive = item.dataset.filter === activeFilter;
-        item.classList.toggle('active', isActive);
-        item.setAttribute('aria-pressed', String(isActive));
-      });
-      refreshCatTitle();
-    }
-    if (params.cat) {
-      applySort();
-      filterProducts();
-    }
+    if (validCats.indexOf(category) !== -1) activeFilter = category;
   }
 
   function renderCatalogNotice() {
@@ -1849,8 +1844,8 @@
   }
   $('#catalogApiRetry').addEventListener('click',loadRemoteCatalog);
   /* ---------- Init ---------- */
-  applyLang();
   applyUrlParams();
+  applyLang();
   openProductFromUrl();
   loadRemoteCatalog();
 })();
