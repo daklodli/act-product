@@ -73,12 +73,17 @@
     try { localStorage.setItem(key, value); return true; } catch (e) { return false; }
   }
 
+  function languageFromUrl() {
+    var value = new URLSearchParams(location.search).get('lang');
+    return value === 'hy' || value === 'en' ? value : null;
+  }
+
   var lang = 'hy';
   try {
-    var urlLangM = /(?:\?|&)lang=(hy|en)(?:&|#|$)/.exec(location.search);
+    var urlLang = languageFromUrl();
     var savedLang = storeGet(LANG_KEY);
-    if (urlLangM) {
-      lang = urlLangM[1];
+    if (urlLang) {
+      lang = urlLang;
       storeSet(LANG_KEY, lang);
     } else if (savedLang === 'hy' || savedLang === 'en') {
       lang = savedLang;
@@ -1233,15 +1238,16 @@
   }
 
   qvAdd.addEventListener('click', function () {
-    addToCart(qvAdd.dataset.name, qvAdd.dataset.price, qvAdd.dataset.category, false, qvAdd.dataset.productId, qvAdd.dataset.currency);
-    closeQuickView(false);
+    if (addToCart(qvAdd.dataset.name, qvAdd.dataset.price, qvAdd.dataset.category, false, qvAdd.dataset.productId, qvAdd.dataset.currency)) {
+      closeQuickView();
+    }
   });
 
   var qvBuy = $('#qvBuy');
   if (qvBuy) {
     qvBuy.addEventListener('click', function () {
       if (!qvAdd.dataset.name) return;
-      addToCart(qvAdd.dataset.name, qvAdd.dataset.price, qvAdd.dataset.category, false, qvAdd.dataset.productId, qvAdd.dataset.currency);
+      if (!addToCart(qvAdd.dataset.name, qvAdd.dataset.price, qvAdd.dataset.category, false, qvAdd.dataset.productId, qvAdd.dataset.currency)) return;
       closeQuickView(false);
       openCheckout();
     });
@@ -1665,9 +1671,17 @@
     if (product) {
       var card = cardForProduct(product);
       if (card) { if (PRODUCTS[Number(card.dataset.index)].id !== product.id) card = chooseCardColor(card,product); openQuickView(card, false); }
-    } else if (qvModal.classList.contains('open')) closeQuickView(false, false);
+    } else if (qvModal.classList.contains('open')) closeQuickView(true, false);
   }
-  window.addEventListener('popstate', openProductFromUrl);
+  window.addEventListener('popstate', function () {
+    var urlLang = languageFromUrl();
+    if (urlLang && urlLang !== lang) {
+      lang = urlLang;
+      storeSet(LANG_KEY, lang);
+      applyLang(false);
+    }
+    openProductFromUrl();
+  });
   window.addEventListener('hashchange', openProductFromUrl);
 
   /* Similar products */
@@ -1746,9 +1760,9 @@
   });
 
 
-  /* ---------- 6e. Language (HY/EN) — reload like normal sites ---------- */
-  function applyLang() {
-    var activeIndex = qvModal.classList.contains('open') ? qvAdd.dataset.index : null;
+  /* ---------- 6e. Language (HY/EN) ---------- */
+  function applyLang(refreshProduct) {
+    var activeIndex = refreshProduct !== false && qvModal.classList.contains('open') ? qvAdd.dataset.index : null;
     var scroll = $('.qv-scroll'); var scrollTop = scroll ? scroll.scrollTop : 0;
     document.documentElement.lang = lang;
     document.title = t('docTitle');
@@ -1768,7 +1782,7 @@
     renderCatalogNotice();
     if (coModal.classList.contains('open')) renderCheckoutSummary();
     if (activeIndex !== null) {
-      openQuickView(productCards.find(function (c) { return c.dataset.index === activeIndex; }));
+      openQuickView(productCards.find(function (c) { return c.dataset.index === activeIndex; }), false);
       if (scroll) scroll.scrollTop = scrollTop;
     }
   }
