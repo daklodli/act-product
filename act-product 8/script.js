@@ -666,7 +666,7 @@
   /* ---------- Catalog categories, sorting and batches ---------- */
   var CATALOG_BATCH = 10;
   var catalogMore = $('#catalogMore');
-  var catalogLimit = CATALOG_BATCH;
+  var catalogLimit = 0;
   var catalogMatches = [];
   var catalogRendered = 0;
 
@@ -685,26 +685,36 @@
     }
     productsGrid.appendChild(batch);
     catalogMore.hidden = catalogRendered >= catalogMatches.length;
+    catalogMore.textContent = t(catalogRendered ? 'catalogMore' : 'catalogShow');
   }
 
   function loadMoreProducts(event) {
     if (catalogMore.hidden) return;
+    window.removeEventListener('scroll', loadVisibleCatalog);
     var firstNewCard = catalogRendered;
     catalogLimit += CATALOG_BATCH;
     appendCatalogCards();
     if (event) productsGrid.children[firstNewCard].querySelector('.product-media').focus({preventScroll:true});
   }
 
+  function loadVisibleCatalog() {
+    if (catalogMore.hidden || window.scrollY <= 0) return;
+    var bounds = catalogMore.getBoundingClientRect();
+    if (bounds.top < window.innerHeight && bounds.bottom > 0) loadMoreProducts();
+  }
+
   catalogMore.addEventListener('click', loadMoreProducts);
   if (window.IntersectionObserver) {
     var catalogObserver = new IntersectionObserver(function (entries) {
-      if (entries[0].isIntersecting) loadMoreProducts();
+      if (!entries[entries.length - 1].isIntersecting) return;
+      if (window.scrollY > 0) loadVisibleCatalog();
+      else window.addEventListener('scroll', loadVisibleCatalog, {passive:true});
     });
     catalogObserver.observe(catalogMore);
   }
 
   function filterProducts(resetLimit) {
-    if (resetLimit) catalogLimit = CATALOG_BATCH;
+    if (resetLimit && catalogLimit) catalogLimit = CATALOG_BATCH;
     var selectedProduct = activeFilter === 'fav' ? isFav : activeFilter === 'sel' ? isSelected : null;
     catalogMatches = catalogProducts().flatMap(function (base) {
       var product = catalogChoice(base);
